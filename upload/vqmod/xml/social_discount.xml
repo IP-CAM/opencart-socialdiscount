@@ -1,0 +1,46 @@
+<modification>
+	<id>Social Discount VK</id>
+	<version>0.1</version>
+	<vqmver>2.0.0</vqmver>
+	<author>Gennady Telegin, support@itxd.ru</author>
+
+	<file name="catalog/view/theme/*/template/product/product.tpl">
+		<operation>
+			<search position="before"><![CDATA[
+			<?php echo $footer; ?>
+			]]></search>
+			<add><![CDATA[
+			<script>
+			VK.Observer.subscribe("widgets.like.liked", function () {
+				sd_userLiked();
+			});
+
+			VK.Observer.subscribe("widgets.like.unliked", function () {
+				sd_userUnliked();
+			});
+			function sd_userLiked() {
+				var product_id = <?php echo $product_id; ?>;
+				$.ajax({
+					url: '/index.php?route=module/social_discount/like',
+					type: 'POST',
+					data: {
+						"product_id": product_id
+					}
+				});
+			}
+
+			function sd_userUnliked() {
+				var product_id = <?php echo $product_id; ?>;
+				$.ajax({
+					url: '/index.php?route=module/social_discount/unlike',
+					type: 'POST',
+					data: {
+						"product_id": product_id
+					}
+				});
+			}
+			</script>
+			]]></add>
+		</operation>
+	</file>
+</modification>
