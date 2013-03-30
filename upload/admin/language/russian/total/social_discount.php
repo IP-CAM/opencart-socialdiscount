@@ -8,7 +8,7 @@ $_['text_success']     = 'Настройки модуля обновлены!';
 
 // Entry
 $_['entry_status']     = 'Статус:';
-$_['entry_discount_value'] = 'Величина скидки:';
+$_['entry_discount_value'] = 'Величина скидки (%):';
 $_['entry_sort_order'] = 'Порядок сортировки:';
 
 // Error

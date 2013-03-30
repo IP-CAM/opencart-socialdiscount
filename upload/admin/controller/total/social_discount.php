@@ -71,10 +71,28 @@ class ControllerTotalSocialDiscount extends Controller {
 			$this->data['social_discount_sort_order'] = $this->config->get('social_discount_sort_order');
 		}
 
-		if (isset($this->request->post['social_discount_value'])) {
-			$this->data['social_discount_value'] = $this->request->post['social_discount_value'];
+		if (isset($this->request->post['social_discount_vk_like_enabled'])) {
+			$this->data['social_discount_vk_like_enabled'] = $this->request->post['social_discount_vk_like_enabled'];
 		} else {
-			$this->data['social_discount_value'] = $this->config->get('social_discount_value');
+			$this->data['social_discount_vk_like_enabled'] = $this->config->get('social_discount_vk_like_enabled');
+		}
+		
+		if (isset($this->request->post['social_discount_vk_like_value'])) {
+			$this->data['social_discount_vk_like_value'] = $this->request->post['social_discount_vk_like_value'];
+		} else {
+			$this->data['social_discount_vk_like_value'] = $this->config->get('social_discount_vk_like_value');
+		}
+		
+		if (isset($this->request->post['social_discount_vk_share_enabled'])) {
+			$this->data['social_discount_vk_share_enabled'] = $this->request->post['social_discount_vk_share_enabled'];
+		} else {
+			$this->data['social_discount_vk_share_enabled'] = $this->config->get('social_discount_vk_share_enabled');
+		}
+		
+		if (isset($this->request->post['social_discount_vk_share_value'])) {
+			$this->data['social_discount_vk_share_value'] = $this->request->post['social_discount_vk_share_value'];
+		} else {
+			$this->data['social_discount_vk_share_value'] = $this->config->get('social_discount_vk_share_value');
 		}
 		
 		$this->template = 'total/social_discount.tpl';

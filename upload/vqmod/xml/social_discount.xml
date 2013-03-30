@@ -10,37 +10,141 @@
 			<?php echo $footer; ?>
 			]]></search>
 			<add><![CDATA[
-			<script>
-			VK.Observer.subscribe("widgets.like.liked", function () {
-				sd_userLiked();
-			});
+<script>
+<?php if ($social_discount_vk_like_enabled): ?>
+VK.Observer.subscribe("widgets.like.liked", function () {
+	sd_userAction('vk','like');
+});
+VK.Observer.subscribe("widgets.like.unliked", function () {
+	sd_userAction('vk','unlike');
+});
+<?php endif; ?>
+<?php if ($social_discount_vk_share_enabled): ?>
+VK.Observer.subscribe("widgets.like.shared", function () {
+	sd_userAction('vk','share');
+});
+VK.Observer.subscribe("widgets.like.unpublished", function () {
+	sd_userAction('vk','unpublish');
+});
+<?php endif; ?>
 
-			VK.Observer.subscribe("widgets.like.unliked", function () {
-				sd_userUnliked();
-			});
-			function sd_userLiked() {
-				var product_id = <?php echo $product_id; ?>;
-				$.ajax({
-					url: '/index.php?route=module/social_discount/like',
-					type: 'POST',
-					data: {
-						"product_id": product_id
+function sd_userAction(soc, action) {
+	var product_id = <?php echo $product_id; ?>;
+	$.ajax({
+		url: '/index.php?route=module/social_discount/action',
+		type: 'POST',
+		dataType: 'json',
+		data: {
+			"product_id": product_id,
+			"social": soc,
+			"action": action
+		},
+		success: function(data) {
+			if (data['success']) {
+				if (data['percent'] > 0) {
+					if ($('span.price-new.social-discount').length > 0) {
+						$('span.price-new.social-discount').html(data['discount_price']);
+					} else {
+						$('div.right span.price-new')
+							.removeClass('price-new')
+							.addClass('price-old')
+							.after('<span class="price-new social-discount">' + data['discount_price'] + '</span>');
 					}
-				});
+				} else {
+					$('div.right span.social-discount').remove();
+					$('div.right span.price-old').last()
+						.removeClass('price-old')
+						.addClass('price-new')
+					;
+				}
+				
+				if (action == 'like' || action == 'share') {
+					
+				} else {
+					
+				}
 			}
-
-			function sd_userUnliked() {
-				var product_id = <?php echo $product_id; ?>;
-				$.ajax({
-					url: '/index.php?route=module/social_discount/unlike',
-					type: 'POST',
-					data: {
-						"product_id": product_id
-					}
-				});
-			}
-			</script>
+		}
+	});
+}
+</script>
 			]]></add>
 		</operation>
+		<operation>
+			<search position="replace" offset="5"><![CDATA[
+			<?php if (!$special) { ?>
+			]]></search>
+			<add><![CDATA[
+			<?php if (!$special) { ?>
+				<span class="price-new"><?php echo $price; ?></span>
+			<?php } else { ?>
+				<span class="price-old"><?php echo $price; ?></span> 
+				<?php if ($social_discount): ?>
+					<span class="price-new social-discount"><?php echo $special; ?></span>
+				<?php else: ?>
+					<span class="price-new"><?php echo $special; ?></span>
+				<?php endif; ?>
+			<?php } ?>
+			]]></add>
+		</operation>	
+		<operation>
+			<search position="replace"><![CDATA[
+			<span class="price-new"><?php echo $special; ?></span>
+			]]></search>
+			<add><![CDATA[
+			<?php if ($social_discount): ?>
+			<span class="price-new social-discount"><?php echo $special; ?></span>
+			<?php else: ?>
+			<span class="price-new"><?php echo $special; ?></span>
+			<?php endif; ?>
+			]]></add>
+		</operation>	
+		
+	</file>
+	
+	<file name="catalog/controller/product/product.php">
+		<operation>
+			<search position="before"><![CDATA[
+			$this->data['heading_title']
+			]]></search>
+			<add><![CDATA[
+			$this->load->model('catalog/social_discount');
+			$discount_percent = $this->model_catalog_social_discount->getDiscountPercentForProduct($product_info['product_id']);
+			
+			$this->data['social_discount_vk_like_enabled']  = $this->config->get('social_discount_vk_like_enabled');
+			$this->data['social_discount_vk_share_enabled'] = $this->config->get('social_discount_vk_share_enabled');
+			]]></add>
+		</operation>
+		<operation>
+			<search position="after"><![CDATA[
+			$this->data['price'] = $this->currency->format(
+			]]></search>
+			<add><![CDATA[
+			$this->data['discount_price'] = $this->currency->format($this->tax->calculate($product_info['price'] * (1 - $discount_percent), $product_info['tax_class_id'], $this->config->get('config_tax')));
+			]]></add>
+		</operation>
+		<operation>
+			<search position="after"><![CDATA[
+			$this->data['special'] = $this->currency->format(
+			]]></search>
+			<add><![CDATA[
+			$this->data['discount_price'] = $this->currency->format($this->tax->calculate($product_info['special'] * (1 - $discount_percent), $product_info['tax_class_id'], $this->config->get('config_tax')));
+			]]></add>
+		</operation>
+		
+		<operation>
+			<search position="before"><![CDATA[
+			$this->data['products'] = array();
+			]]></search>
+			<add><![CDATA[
+			if ($discount_percent > 0) {
+				$this->data['special'] = $this->data['discount_price'];
+				$this->data['social_discount'] = true;
+			} else {
+				$this->data['social_discount'] = false;
+			}
+			]]></add>
+		</operation>
+		
 	</file>
 </modification>

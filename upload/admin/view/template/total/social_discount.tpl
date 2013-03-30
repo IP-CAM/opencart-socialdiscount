@@ -28,13 +28,27 @@
                 <?php } ?>
               </select></td>
           </tr>
-		  <tr>
-            <td><?php echo $entry_discount_value; ?></td>
-            <td><input type="text" name="social_discount_value" value="<?php echo $social_discount_value; ?>" size="1" /></td>
-          </tr>
           <tr>
             <td><?php echo $entry_sort_order; ?></td>
             <td><input type="text" name="social_discount_sort_order" value="<?php echo $social_discount_sort_order; ?>" size="1" /></td>
+          </tr>
+		  <tr>
+            <td><?php echo $entry_discount_value; ?></td>
+            <td>
+				<table class="list" style="width: 350px;">
+				<tr>
+					<td>VK
+					<td>
+						<input type="checkbox" name="social_discount_vk_like_enabled" id="social_discount_vk_like_enabled"<?php echo $social_discount_vk_like_enabled ? ' checked="checked"' : ''; ?>/><label for="social_discount_vk_like_enabled">Like</label>
+						<input type="text" name="social_discount_vk_like_value" value="<?php echo $social_discount_vk_like_value; ?>" size="1" />
+					</td>
+					<td>
+						<input type="checkbox" name="social_discount_vk_share_enabled" id="social_discount_vk_share_enabled"<?php echo $social_discount_vk_share_enabled ? ' checked="checked"' : ''; ?>/><label for="social_discount_vk_share_enabled">Share</label>
+						<input type="text" name="social_discount_vk_share_value" value="<?php echo $social_discount_vk_share_value; ?>" size="1" />
+					</td>
+				</tr>
+				</table>
+			</td>
           </tr>
         </table>
       </form>

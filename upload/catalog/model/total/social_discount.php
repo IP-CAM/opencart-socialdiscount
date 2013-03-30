@@ -4,12 +4,12 @@ class ModelTotalSocialDiscount extends Model {
 		$this->load->language('total/social_discount');
 		$this->load->model('catalog/social_discount');
 		
-		$discount = $this->model_catalog_social_discount->getDiscount( $this->cart->getProducts() );
+		$discount = $this->model_catalog_social_discount->getDiscount( $this->cart->getProducts());
 		
 		if ($discount > 0) {
 			$total_data[] = array( 
 				'code'       => 'social_discount',
-				'title'      => sprintf($this->language->get('text_social_discount'), $this->config->get('social_discount_value')),
+				'title'      => $this->language->get('text_social_discount'),
 				'text'       => $this->currency->format($discount),
 				'value'      => (-$discount),
 				'sort_order' => $this->config->get('social_discount_sort_order')
