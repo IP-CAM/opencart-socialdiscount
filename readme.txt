@@ -10,6 +10,7 @@
   a. Создайте код кнопки на странице http://vk.com/developers.php?p=Like
   b. Разместите его в нужном месте в файле product/product.tpl вашей темы оформления.
 
+  Для FB http://developers.facebook.com/docs/reference/plugins/like/, XFBML вариант
 2. Установить VQMod (https://code.google.com/p/vqmod/), если он не установлен.
 Если его не установить, то изменения в файлах темы оформления, необходимые для работы данного модуля, нужно будет вносить вручную (описано ниже).
 

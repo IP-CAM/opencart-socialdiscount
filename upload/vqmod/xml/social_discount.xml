@@ -28,6 +28,26 @@ VK.Observer.subscribe("widgets.like.unpublished", function () {
 });
 <?php endif; ?>
 
+<?php if ($social_discount_fb_like_enabled): ?>
+ window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '223658394329336', // App ID
+      status     : true, // check login status
+      cookie     : true, // enable cookies to allow the server to access the session
+      xfbml      : true  // parse XFBML
+    });
+
+    //Facebook tracking
+    FB.Event.subscribe('edge.create', function(targetUrl) {
+        sd_userAction('fb','like');
+    });
+	
+	FB.Event.subscribe('edge.remove', function(targetUrl) {
+        sd_userAction('fb','unlike');
+    });
+  };
+<?php endif; ?>
+
 function sd_userAction(soc, action) {
 	var product_id = <?php echo $product_id; ?>;
 	$.ajax({
@@ -113,6 +133,8 @@ function sd_userAction(soc, action) {
 			
 			$this->data['social_discount_vk_like_enabled']  = $this->config->get('social_discount_vk_like_enabled');
 			$this->data['social_discount_vk_share_enabled'] = $this->config->get('social_discount_vk_share_enabled');
+			
+			$this->data['social_discount_fb_like_enabled']  = $this->config->get('social_discount_fb_like_enabled');
 			]]></add>
 		</operation>
 		<operation>
