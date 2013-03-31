@@ -11,7 +11,7 @@ class ControllerModuleSocialDiscount extends Controller {
 			$json['error'] = true;
 		}
 		
-		if (!in_array($this->request->post['social'], array('vk'))) {
+		if (!in_array($this->request->post['social'], array('vk', 'fb'))) {
 			$json['error'] = true;
 		} else {
 			$social = $this->request->post['social'];
