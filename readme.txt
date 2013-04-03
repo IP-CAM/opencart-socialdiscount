@@ -14,8 +14,9 @@
   a. Создайте код кнопки на странице http://vk.com/developers.php?p=Like
   b. Разместите его в нужном месте в файле product/product.tpl вашей темы оформления.
 
-  Для FB http://developers.facebook.com/docs/reference/plugins/like/, XFBML вариант
-  Для Mail.Ru и Одноклассники: http://api.mail.ru/sites/plugins/share/
+  Для FB:  http://developers.facebook.com/docs/reference/plugins/like/, XFBML вариант
+  Для Google Plus: https://developers.google.com/+/web/+1button/, в тег <g:plusone> добавьте атрибут callback="plusone_share", например:
+     <g:plusone callback="plusone_share"></g:plusone>
   
 2. Установить VQMod (https://code.google.com/p/vqmod/), если он не установлен.
 Если его не установить, то изменения в файлах темы оформления, необходимые для работы данного модуля, нужно будет вносить вручную (описано ниже).

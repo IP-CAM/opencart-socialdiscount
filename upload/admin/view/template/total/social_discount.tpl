@@ -57,6 +57,17 @@
 						
 					</td>
 				</tr>
+				
+				<tr>
+					<td>Google Plus
+					<td>
+						<input type="checkbox" name="social_discount_gp_like_enabled" id="social_discount_gp_like_enabled"<?php echo $social_discount_gp_like_enabled ? ' checked="checked"' : ''; ?>/><label for="social_discount_vk_like_enabled">Like</label>
+						<input type="text" name="social_discount_gp_like_value" value="<?php echo $social_discount_gp_like_value; ?>" size="1" />
+					</td>
+					<td>
+						
+					</td>
+				</tr>
 				</table>
 			</td>
           </tr>

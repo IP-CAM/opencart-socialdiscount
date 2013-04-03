@@ -11,7 +11,7 @@ class ControllerModuleSocialDiscount extends Controller {
 			$json['error'] = true;
 		}
 		
-		if (!in_array($this->request->post['social'], array('vk', 'fb'))) {
+		if (!in_array($this->request->post['social'], array('vk', 'fb', 'gp'))) {
 			$json['error'] = true;
 		} else {
 			$social = $this->request->post['social'];
@@ -38,10 +38,12 @@ class ControllerModuleSocialDiscount extends Controller {
 				
 				$price = $product['price'];
 				if ($product['special']) {
-					$price = $product['special'];
+					$pr = ($product['price'] - $product['special']) / $product['price'];
+					$json['percent'] += $pr;
 				}
 				
 				$json['discount_price'] = $this->currency->format($this->tax->calculate($price * (1 - $json['percent']), $product['tax_class_id'], $this->config->get('config_tax')));
+				$json['percent'] = sprintf("%.0f", $json['percent'] * 100);
 			} else {
 				$json['error'] = false;
 			}
