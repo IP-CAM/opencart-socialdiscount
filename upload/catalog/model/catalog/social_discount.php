@@ -69,12 +69,31 @@ class ModelCatalogSocialDiscount extends Model {
 	
 	private function _getDiscountPercentForProduct($discount, $product_id) {
 		$percent = 0;
-				
+		
+		//$sd_custom = $this->config->get('social_discount_custom');
+		$sd_custom = $this->getCustomSocialDiscount($product_id);
+		
+		if ($sd_custom && $sd_custom['social_discount_custom_enabled']) {
+			$sd_params = $sd_custom;
+		} else {
+			$sd_params = array();
+		}
+		
 		// find maximum discount
 		if (isset($discount[$product_id]['like']) === true) {
 			foreach ($discount[$product_id]['like'] as $social => $action_time) {
-				if ($this->config->get('social_discount_' . $social . '_like_enabled')) {
-					$v = $this->config->get('social_discount_' . $social . '_like_value') / 100;
+				$action_enabled = $this->config->get('social_discount_' . $social . '_like_enabled');
+				
+				if (isset($sd_params['social_discount_' . $social . '_like_enabled']) === true) {
+					$action_enabled = $sd_params['social_discount_' . $social . '_like_enabled'];
+				}
+				
+				if ($action_enabled) {
+					if (isset($sd_params['social_discount_' . $social . '_like_value']) === true) {
+						$v = $sd_params['social_discount_' . $social . '_like_value'] / 100;
+					} else {
+						$v = $this->config->get('social_discount_' . $social . '_like_value') / 100;
+					}
 					
 					if ($v > $percent) {
 						$percent = $v;
@@ -85,8 +104,18 @@ class ModelCatalogSocialDiscount extends Model {
 		
 		if (isset($discount[$product_id]['share']) === true) {
 			foreach ($discount[$product_id]['share'] as $social => $action_time) {
-				if ($this->config->get('social_discount_' . $social . '_share_enabled')) {
-					$v = $this->config->get('social_discount_' . $social . '_share_value') / 100;
+				$action_enabled = $this->config->get('social_discount_' . $social . '_share_enabled');
+				
+				if (isset($sd_params['social_discount_' . $social . '_share_enabled']) === true) {
+					$action_enabled = $sd_params['social_discount_' . $social . '_share_enabled'];
+				}
+				
+				if ($action_enabled) {
+					if (isset($sd_params['social_discount_' . $social . '_share_value']) === true) {
+						$v = $sd_params['social_discount_' . $social . '_share_value'] / 100;
+					} else {
+						$v = $this->config->get('social_discount_' . $social . '_share_value') / 100;
+					}
 					
 					if ($v > $percent) {
 						$percent = $v;
@@ -113,7 +142,29 @@ class ModelCatalogSocialDiscount extends Model {
 		
 		return $result;
 	}
+
+	private function getCustomSocialDiscount($product_id) {
+		$this->checkTables();
+		
+		$results = $this->db->query('SELECT * FROM ' . DB_PREFIX . 'social_discount WHERE product_id = ' . (int)$product_id . ' LIMIT 1');
+		if ($results->num_rows > 0) {
+			return unserialize($results->row['value']);
+		} else {
+			return false;
+		}
+	}
 	
+	private function checkTables() {
+		$sql = 'CREATE TABLE IF NOT EXISTS `' . DB_PREFIX . 'social_discount`('
+			. '`product_id` int(11) NOT NULL,'
+			. '`value` text NOT NULL,'
+			. ' PRIMARY KEY (`product_id`) '
+			. ') ENGINE=MyISAM DEFAULT CHARSET=utf8;';
+			
+		$this->db->query($sql);
+	}
+	
+	/* Internal functions */
 	private function readCookie() {
 		if (isset($_COOKIE['sd'])) {
 			$content = $this->decrypt($_COOKIE['sd'], $this->secret);
