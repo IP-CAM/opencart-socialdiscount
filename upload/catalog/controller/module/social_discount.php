@@ -38,12 +38,12 @@ class ControllerModuleSocialDiscount extends Controller {
 				
 				$price = $product['price'];
 				if ($product['special']) {
-					$pr = ($product['price'] - $product['special']) / $product['price'];
+					$pr = ($product['price'] - $product['special']) *1.0 / $product['price'];
 					$json['percent'] += $pr;
 				}
 				
 				$json['discount_price'] = $this->currency->format($this->tax->calculate($price * (1 - $json['percent']), $product['tax_class_id'], $this->config->get('config_tax')));
-				$json['percent'] = sprintf("%.0f", $json['percent'] * 100);
+				$json['percent'] = sprintf("%.3f", $json['percent'] * 100);
 			} else {
 				$json['error'] = false;
 			}
