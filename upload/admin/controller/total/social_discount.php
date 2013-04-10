@@ -23,6 +23,11 @@ class ControllerTotalSocialDiscount extends Controller {
 		$this->data['text_disabled'] = $this->language->get('text_disabled');
 		
 		$this->data['entry_status'] = $this->language->get('entry_status');
+		$this->data['entry_discount_method'] = $this->language->get('entry_discount_method');
+		$this->data['entry_discount_method_help'] = $this->language->get('entry_discount_method_help');
+		$this->data['entry_discount_active_mark'] = $this->language->get('entry_discount_active_mark');
+		$this->data['entry_discount_active_mark_help'] = $this->language->get('entry_discount_active_mark_help');
+		
 		$this->data['entry_discount_value'] = $this->language->get('entry_discount_value');
 		$this->data['entry_sort_order'] = $this->language->get('entry_sort_order');
 					
@@ -71,6 +76,27 @@ class ControllerTotalSocialDiscount extends Controller {
 			$this->data['social_discount_sort_order'] = $this->config->get('social_discount_sort_order');
 		}
 
+		if (isset($this->request->post['social_discount_discount_method'])) {
+			$this->data['social_discount_discount_method'] = $this->request->post['social_discount_discount_method'];
+		} else {
+			$this->data['social_discount_discount_method'] = $this->config->get('social_discount_discount_method');
+		}
+		
+		$this->data['discount_methods'] = array (
+			0 => 'Скидка с основной цены',
+			1 => 'Скидка с акции',
+		);
+		
+		if (isset($this->request->post['social_discount_active_mark'])) {
+			$this->data['social_discount_active_mark'] = $this->request->post['social_discount_active_mark'];
+		} else {
+			if ($this->config->get('social_discount_active_mark') != null) {
+				$this->data['social_discount_active_mark'] = $this->config->get('social_discount_active_mark');
+			} else {
+				$this->data['social_discount_active_mark'] = $this->language->get('entry_default_discount_active_mark');
+			}
+		}
+		
 		if (isset($this->request->post['social_discount_vk_like_enabled'])) {
 			$this->data['social_discount_vk_like_enabled'] = $this->request->post['social_discount_vk_like_enabled'];
 		} else {

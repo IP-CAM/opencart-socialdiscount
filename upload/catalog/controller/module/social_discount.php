@@ -32,18 +32,16 @@ class ControllerModuleSocialDiscount extends Controller {
 				$json['success'] = true;
 				
 				// calculate and return new price with discount
-				$json['percent'] = $this->model_catalog_social_discount->getDiscountPercentForProduct($product_id);
 				$this->load->model('catalog/product');
 				$product = $this->model_catalog_product->getProduct($product_id);
 				
-				$price = $product['price'];
+				$json['percent'] = sprintf("%.3f", $product['social_discount_percent'] * 100);
 				if ($product['special']) {
-					$pr = ($product['price'] - $product['special']) *1.0 / $product['price'];
-					$json['percent'] += $pr;
+					$json['discount_price'] = $this->currency->format($this->tax->calculate($product['special'], $product['tax_class_id'], $this->config->get('config_tax')));
+				} else {
+					$json['discount_price'] = '';
 				}
-				
-				$json['discount_price'] = $this->currency->format($this->tax->calculate($price * (1 - $json['percent']), $product['tax_class_id'], $this->config->get('config_tax')));
-				$json['percent'] = sprintf("%.3f", $json['percent'] * 100);
+				$json['social_discount'] = $product['social_discount']; // if discount is social or not
 			} else {
 				$json['error'] = false;
 			}
@@ -53,50 +51,8 @@ class ControllerModuleSocialDiscount extends Controller {
 	}
 	
 	/* todo:
-	  1. В корзине специально помечать каждый товар со скидкой (добавлять в конце span)
-	  2. Общую скидку отображать отдельной строкой
+	  1. В корзине специально помечать каждый товар со скидкой (добавлять в конце span
 	*/
-	public function like() {
-		
-		$json = array();
-		
-		if (isset($this->request->post['product_id']) === false) {
-			$json['error'] = true;
-		} else {
-			$this->load->model('catalog/social_discount');
-			
-			$product_id = (int)$this->request->post['product_id'];
-			
-			if ($this->model_catalog_social_discount->addLike($product_id)) {
-				$json['success'] = true;
-			} else {
-				$json['error'] = false;
-			}
-		}
-		
-		$this->response->setOutput(json_encode($json));
-	}
-	
-	public function unlike() {
-		$this->load->model('catalog/social_discount');
-		
-		$json = array();
-		
-		if (isset($this->request->post['product_id']) === false) {
-			$json['error'] = true;
-		} else {
-			$product_id = (int)$this->request->post['product_id'];
-		
-			if ($this->model_catalog_social_discount->removeLike($product_id)) {
-				$json['success'] = true;
-			} else {
-				$json['error'] = false;
-			}
-		}
-		
-		$this->response->setOutput(json_encode($json));
-	}
-	
 	public function isliked() {
 		$json = array();
 		
@@ -112,5 +68,6 @@ class ControllerModuleSocialDiscount extends Controller {
 		
 		$this->response->setOutput(json_encode($json));
 	}
+	
 }
 ?>

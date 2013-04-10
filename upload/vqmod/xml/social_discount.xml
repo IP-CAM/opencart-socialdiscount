@@ -74,26 +74,18 @@ function sd_userAction(soc, action) {
 		success: function(data) {
 			if (data['success']) {
 				if (data['percent'] > 0) {
-					if ($('span.price-new.social-discount').length > 0) {
-						$('span.price-new.social-discount').html(data['discount_price']);
+					$('#priceUpdate1').html(data['discount_price']);
+					$('#priceUpdate').addClass('price-old');
+					
+					if (data['social_discount']) {
+						$('#social_discount_active').show();
 					} else {
-						$('div.right span.price-new')
-							.removeClass('price-new')
-							.addClass('price-old')
-							.after('<span class="price-new social-discount">' + data['discount_price'] + '</span>');
+						$('#social_discount_active').hide();
 					}
 				} else {
-					$('div.right span.social-discount').remove();
-					$('div.right span.price-old').last()
-						.removeClass('price-old')
-						.addClass('price-new')
-					;
-				}
-				
-				if (action == 'like' || action == 'share') {
-					
-				} else {
-					
+					$('#priceUpdate').removeClass('price-old');
+					$('#priceUpdate1').html('');
+					$('#social_discount_active').hide();
 				}
 			}
 		}
@@ -102,33 +94,32 @@ function sd_userAction(soc, action) {
 </script>
 			]]></add>
 		</operation>
+		
 		<operation>
-			<search position="replace" offset="5"><![CDATA[
-			<?php if (!$special) { ?>
-			]]></search>
-			<add><![CDATA[
-			<?php if (!$special) { ?>
-				<span class="price-new"><?php echo $price; ?></span>
-			<?php } else { ?>
-				<span class="price-old"><?php echo $price; ?></span> 
-				<?php if ($social_discount): ?>
-					<span class="price-new social-discount"><?php echo $special; ?></span>
-				<?php else: ?>
-					<span class="price-new"><?php echo $special; ?></span>
-				<?php endif; ?>
-			<?php } ?>
+            <search position="replace" index="1"><![CDATA[
+            <?php echo $price; ?>
+            ]]></search>
+            <add><![CDATA[
+			<span id="priceUpdate"><?php echo $price; ?></span><span class="price-new" id="priceUpdate1"></span>
 			]]></add>
-		</operation>	
+        </operation>
+		
 		<operation>
-			<search position="replace"><![CDATA[
-			<span class="price-new"><?php echo $special; ?></span>
+            <search position="replace" index="1"><![CDATA[
+            <span class="price-old"><?php echo $price; ?></span> <span class="price-new"><?php echo $special; ?></span>
+            ]]></search>
+            <add><![CDATA[
+			<span class="price-old" id="priceUpdate"><?php echo $price; ?></span> <span class="price-new" id="priceUpdate1"><?php echo $special; ?></span>
+			]]></add>
+        </operation>
+		
+		<operation>
+			<search position="after"><![CDATA[
+			<span class="price-new"
 			]]></search>
 			<add><![CDATA[
-			<?php if ($social_discount): ?>
-			<span class="price-new social-discount"><?php echo $special; ?></span>
-			<?php else: ?>
-			<span class="price-new"><?php echo $special; ?></span>
-			<?php endif; ?>
+			
+			<div id="social_discount_active"<?php if ($social_discount == false) { echo ' style="display: none;"'; } else { echo ' style="display: inline-block"'; } ?>><?php echo $social_discount_active_mark; ?></div>
 			]]></add>
 		</operation>	
 		
@@ -149,40 +140,79 @@ function sd_userAction(soc, action) {
 			$this->data['social_discount_fb_like_enabled']  = $this->config->get('social_discount_fb_like_enabled');
 			
 			$this->data['social_discount_gp_like_enabled']  = $this->config->get('social_discount_gp_like_enabled');
-			]]></add>
-		</operation>
-		<operation>
-			<search position="after"><![CDATA[
-			$this->data['price'] = $this->currency->format(
-			]]></search>
-			<add><![CDATA[
-			$this->data['discount_price'] = $this->currency->format($this->tax->calculate($product_info['price'] * (1 - $discount_percent), $product_info['tax_class_id'], $this->config->get('config_tax')));
-			]]></add>
-		</operation>
-		<operation>
-			<search position="after"><![CDATA[
-			$this->data['special'] = $this->currency->format(
-			]]></search>
-			<add><![CDATA[
-			$this->data['discount_price'] = $this->currency->format($this->tax->calculate($product_info['special'] * (1 - $discount_percent), $product_info['tax_class_id'], $this->config->get('config_tax')));
-			]]></add>
-		</operation>
-		
-		<operation>
-			<search position="before"><![CDATA[
-			$this->data['products'] = array();
-			]]></search>
-			<add><![CDATA[
 			
-			if ($discount_percent > 0) {
-				$this->data['special'] = $this->data['discount_price'];
-				$this->data['social_discount'] = true;
-			} else {
-				$this->data['social_discount'] = false;
-			}
+			$this->data['social_discount_active_mark'] = $this->config->get('social_discount_active_mark');
 			]]></add>
 		</operation>
 		
+		
+		<operation>
+			<search position="after"><![CDATA[
+			if ($product_info) {
+			]]></search>
+			<add><![CDATA[
+			$this->data['social_discount'] = $product_info['social_discount'];
+			]]></add>
+		</operation>
+	</file>
+	
+	<file name="catalog/model/catalog/product.php">
+		<operation>
+			<search position="replace"><![CDATA[
+			public function getProduct($product_id) {
+			]]></search>
+			<add><![CDATA[
+			public function getProduct($product_id) {
+				$this->load->model('catalog/social_discount');
+				$discount_method = $this->config->get('social_discount_discount_method');
+				
+				$product = $this->__getProduct($product_id);
+					
+				$discount_percent = $this->model_catalog_social_discount->getDiscountPercentForProduct($product['product_id']);
+				
+				$product['social_discount'] = ($discount_percent > 0);
+				
+				if ($product['price'] > 0 && $product['special']) {
+					$special_percent = ($product['price'] - $product['special']) * 1.0 / $product['price'];
+				} else {
+					$special_percent = 0;
+				}
+				
+				if ($discount_percent > 0) {
+					switch ($discount_method) {
+					case 1: // special price
+						if ($product['special']) {
+							$special = $product['special'] * (1 - $discount_percent);
+
+							$product['social_discount_percent'] = sprintf("%.2f", $special_percent + $discount_percent);
+							
+							break;
+						}
+					case 0: // base price
+						$product['social_discount_percent'] = $discount_percent;
+						
+						$discount_value = $product['price'] * $discount_percent;
+						
+						if ($product['special']) {
+							$special = $product['special'] - $discount_value;
+						} else {
+							$special = $product['price'] - $discount_value;
+						}
+						
+						break;
+					}
+				
+					$product['special'] = $special;
+				} else {
+					$product['social_discount_percent'] = $special_percent;
+				}
+				
+				return $product;
+			}
+			
+			public function __getProduct($product_id) {
+			]]></add>
+		</operation>		
 	</file>
 	
 	<file name="admin/controller/catalog/product.php">

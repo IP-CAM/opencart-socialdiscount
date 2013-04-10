@@ -71,6 +71,21 @@
 				</table>
 			</td>
           </tr>
+		  
+		  <tr>
+            <td><?php echo $entry_discount_type; ?><br/><span class="help"><?php echo $entry_discount_type_help; ?></span></td>
+            <td><select name="social_discount_discount_type">
+				<?php foreach ($discount_types as $type_id => $type_name): ?>
+                <option value="1"<?php if ($social_discount_discount_type == $type_id) { echo ' selected="selected"'; } ?>><?php echo $type_name; ?></option>
+				<?php endforeach; ?>
+              </select></td>
+          </tr>
+		  
+		  <tr>
+            <td><?php echo $entry_discount_active_mark; ?><br/><span class="help"><?php echo $entry_discount_active_mark_help; ?></span></td>
+            <td><input type="text" name="social_discount_active_mark" value="<?php echo $social_discount_active_mark; ?>" size="20" /></td>
+          </tr>
+		  
         </table>
       </form>
     </div>
