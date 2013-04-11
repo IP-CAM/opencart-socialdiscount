@@ -79,24 +79,28 @@ class ModelCatalogSocialDiscount extends Model {
 			$sd_params = array();
 		}
 		
+		$lifetime = (int)$this->config->get('social_discount_lifetime');
+		
 		// find maximum discount
 		if (isset($discount[$product_id]['like']) === true) {
 			foreach ($discount[$product_id]['like'] as $social => $action_time) {
-				$action_enabled = $this->config->get('social_discount_' . $social . '_like_enabled');
-				
-				if (isset($sd_params['social_discount_' . $social . '_like_enabled']) === true) {
-					$action_enabled = $sd_params['social_discount_' . $social . '_like_enabled'];
-				}
-				
-				if ($action_enabled) {
-					if (isset($sd_params['social_discount_' . $social . '_like_value']) === true) {
-						$v = $sd_params['social_discount_' . $social . '_like_value'] / 100;
-					} else {
-						$v = $this->config->get('social_discount_' . $social . '_like_value') / 100;
+				if ($lifetime == 0 || (time() - $action_time <= $lifetime)) {
+					$action_enabled = $this->config->get('social_discount_' . $social . '_like_enabled');
+					
+					if (isset($sd_params['social_discount_' . $social . '_like_enabled']) === true) {
+						$action_enabled = $sd_params['social_discount_' . $social . '_like_enabled'];
 					}
 					
-					if ($v > $percent) {
-						$percent = $v;
+					if ($action_enabled) {
+						if (isset($sd_params['social_discount_' . $social . '_like_value']) === true) {
+							$v = $sd_params['social_discount_' . $social . '_like_value'] / 100;
+						} else {
+							$v = $this->config->get('social_discount_' . $social . '_like_value') / 100;
+						}
+						
+						if ($v > $percent) {
+							$percent = $v;
+						}
 					}
 				}
 			}
@@ -104,21 +108,23 @@ class ModelCatalogSocialDiscount extends Model {
 		
 		if (isset($discount[$product_id]['share']) === true) {
 			foreach ($discount[$product_id]['share'] as $social => $action_time) {
-				$action_enabled = $this->config->get('social_discount_' . $social . '_share_enabled');
-				
-				if (isset($sd_params['social_discount_' . $social . '_share_enabled']) === true) {
-					$action_enabled = $sd_params['social_discount_' . $social . '_share_enabled'];
-				}
-				
-				if ($action_enabled) {
-					if (isset($sd_params['social_discount_' . $social . '_share_value']) === true) {
-						$v = $sd_params['social_discount_' . $social . '_share_value'] / 100;
-					} else {
-						$v = $this->config->get('social_discount_' . $social . '_share_value') / 100;
+				if ($lifetime == 0 || (time() - $action_time <= $lifetime)) {
+					$action_enabled = $this->config->get('social_discount_' . $social . '_share_enabled');
+					
+					if (isset($sd_params['social_discount_' . $social . '_share_enabled']) === true) {
+						$action_enabled = $sd_params['social_discount_' . $social . '_share_enabled'];
 					}
 					
-					if ($v > $percent) {
-						$percent = $v;
+					if ($action_enabled) {
+						if (isset($sd_params['social_discount_' . $social . '_share_value']) === true) {
+							$v = $sd_params['social_discount_' . $social . '_share_value'] / 100;
+						} else {
+							$v = $this->config->get('social_discount_' . $social . '_share_value') / 100;
+						}
+						
+						if ($v > $percent) {
+							$percent = $v;
+						}
 					}
 				}
 			}

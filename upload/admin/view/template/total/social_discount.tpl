@@ -73,10 +73,15 @@
           </tr>
 		  
 		  <tr>
-            <td><?php echo $entry_discount_type; ?><br/><span class="help"><?php echo $entry_discount_type_help; ?></span></td>
-            <td><select name="social_discount_discount_type">
-				<?php foreach ($discount_types as $type_id => $type_name): ?>
-                <option value="1"<?php if ($social_discount_discount_type == $type_id) { echo ' selected="selected"'; } ?>><?php echo $type_name; ?></option>
+            <td><?php echo $entry_discount_lifetime; ?><br/><span class="help"><?php echo $entry_discount_lifetime_help; ?></span></td>
+            <td><input type="text" name="social_discount_lifetime" value="<?php echo $social_discount_lifetime; ?>" size="20" /></td>
+          </tr>
+		  
+		  <tr>
+            <td><?php echo $entry_discount_method; ?><br/><span class="help"><?php echo $entry_discount_method_help; ?></span></td>
+            <td><select name="social_discount_discount_method">
+				<?php foreach ($discount_methods as $method_id => $method_name): ?>
+                <option value="1"<?php if ($social_discount_discount_method == $method_id) { echo ' selected="selected"'; } ?>><?php echo $method_name; ?></option>
 				<?php endforeach; ?>
               </select></td>
           </tr>

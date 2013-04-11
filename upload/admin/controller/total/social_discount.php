@@ -25,6 +25,10 @@ class ControllerTotalSocialDiscount extends Controller {
 		$this->data['entry_status'] = $this->language->get('entry_status');
 		$this->data['entry_discount_method'] = $this->language->get('entry_discount_method');
 		$this->data['entry_discount_method_help'] = $this->language->get('entry_discount_method_help');
+		
+		$this->data['entry_discount_lifetime'] = $this->language->get('entry_discount_lifetime');
+		$this->data['entry_discount_lifetime_help'] = $this->language->get('entry_discount_lifetime_help');
+		
 		$this->data['entry_discount_active_mark'] = $this->language->get('entry_discount_active_mark');
 		$this->data['entry_discount_active_mark_help'] = $this->language->get('entry_discount_active_mark_help');
 		
@@ -76,6 +80,16 @@ class ControllerTotalSocialDiscount extends Controller {
 			$this->data['social_discount_sort_order'] = $this->config->get('social_discount_sort_order');
 		}
 
+		if (isset($this->request->post['social_discount_lifetime'])) {
+			$this->data['social_discount_lifetime'] = $this->request->post['social_discount_lifetime'];
+		} else {
+			if ($this->config->get('social_discount_lifetime') != null) {
+				$this->data['social_discount_lifetime'] = $this->config->get('social_discount_lifetime');
+			} else {
+				$this->data['social_discount_lifetime'] = 0;
+			}
+		}
+		
 		if (isset($this->request->post['social_discount_discount_method'])) {
 			$this->data['social_discount_discount_method'] = $this->request->post['social_discount_discount_method'];
 		} else {
