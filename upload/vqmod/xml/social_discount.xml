@@ -60,6 +60,37 @@ function plusone_share(data) {
 }
 <?php endif; ?>
 
+<?php if ($social_discount_mm_like_enabled || $social_discount_ok_like_enabled): ?>
+mailru.loader.require('api', function(){
+   mailru.events.listen(mailru.plugin.events.liked, function(result){
+	   /* todo - save ID of liked recored */
+	   <?php if ($social_discount_mm_like_enabled): ?>
+	   if (result.type == 'mm') {
+			sd_userAction('mm','like');
+	   }
+	   <?php endif; ?>
+	   <?php if ($social_discount_ok_like_enabled): ?>
+	   if (result.type == 'ok') {
+			sd_userAction('ok','like');
+	   }
+	   <?php endif; ?>
+   });
+
+   mailru.events.listen(mailru.plugin.events.unliked, function(result){
+	   <?php if ($social_discount_mm_like_enabled): ?>
+       if (result.type == 'mm') {
+			sd_userAction('mm','unlike');
+	   }
+	   <?php endif; ?>
+	   <?php if ($social_discount_ok_like_enabled): ?>
+	   if (result.type == 'ok') {
+			sd_userAction('ok','unlike');
+	   }
+	   <?php endif; ?>
+   });
+});
+<?php endif; ?>
+
 function sd_userAction(soc, action) {
 	var product_id = <?php echo $product_id; ?>;
 	$.ajax({
@@ -136,10 +167,10 @@ function sd_userAction(soc, action) {
 			
 			$this->data['social_discount_vk_like_enabled']  = $this->config->get('social_discount_vk_like_enabled');
 			$this->data['social_discount_vk_share_enabled'] = $this->config->get('social_discount_vk_share_enabled');
-			
 			$this->data['social_discount_fb_like_enabled']  = $this->config->get('social_discount_fb_like_enabled');
-			
 			$this->data['social_discount_gp_like_enabled']  = $this->config->get('social_discount_gp_like_enabled');
+			$this->data['social_discount_mm_like_enabled']  = $this->config->get('social_discount_mm_like_enabled');
+			$this->data['social_discount_ok_like_enabled']  = $this->config->get('social_discount_ok_like_enabled');
 			
 			$this->data['social_discount_active_mark'] = $this->config->get('social_discount_active_mark');
 			]]></add>
@@ -233,6 +264,10 @@ function sd_userAction(soc, action) {
 				'social_discount_fb_like_value' => '',
 				'social_discount_gp_like_enabled' => false,
 				'social_discount_gp_like_value' => '',
+				'social_discount_mm_like_enabled' => false,
+				'social_discount_mm_like_value' => '',
+				'social_discount_ok_like_enabled' => false,
+				'social_discount_ok_like_value' => '',
 			);
 			// read settings from module
 			foreach ($sd_params as $sd_param_name => $value) {
@@ -253,11 +288,15 @@ function sd_userAction(soc, action) {
 			$sd_params['social_discount_vk_share_enabled'] = isset($this->request->post['social_discount_vk_share_enabled']) && $this->request->post['social_discount_vk_share_enabled'] == 'on';
 			$sd_params['social_discount_fb_like_enabled'] = isset($this->request->post['social_discount_fb_like_enabled']) && $this->request->post['social_discount_fb_like_enabled'] == 'on';
 			$sd_params['social_discount_gp_like_enabled'] = isset($this->request->post['social_discount_gp_like_enabled']) && $this->request->post['social_discount_gp_like_enabled'] == 'on';
+			$sd_params['social_discount_mm_like_enabled'] = isset($this->request->post['social_discount_mm_like_enabled']) && $this->request->post['social_discount_mm_like_enabled'] == 'on';
+			$sd_params['social_discount_ok_like_enabled'] = isset($this->request->post['social_discount_ok_like_enabled']) && $this->request->post['social_discount_ok_like_enabled'] == 'on';
 			
 			$sd_params['social_discount_vk_like_value'] = isset($this->request->post['social_discount_vk_like_value']) ? $this->request->post['social_discount_vk_like_value'] : $sd_params['social_discount_vk_like_value'];
 			$sd_params['social_discount_vk_share_value'] = isset($this->request->post['social_discount_vk_share_value']) ? $this->request->post['social_discount_vk_share_value'] : $sd_params['social_discount_vk_share_value'];
 			$sd_params['social_discount_fb_like_value'] = isset($this->request->post['social_discount_fb_like_value']) ? $this->request->post['social_discount_fb_like_value'] : $sd_params['social_discount_fb_like_value'];
 			$sd_params['social_discount_gp_like_value'] = isset($this->request->post['social_discount_gp_like_value']) ? $this->request->post['social_discount_gp_like_value'] : $sd_params['social_discount_gp_like_value'];
+			$sd_params['social_discount_mm_like_value'] = isset($this->request->post['social_discount_mm_like_value']) ? $this->request->post['social_discount_mm_like_value'] : $sd_params['social_discount_mm_like_value'];
+			$sd_params['social_discount_ok_like_value'] = isset($this->request->post['social_discount_ok_like_value']) ? $this->request->post['social_discount_ok_like_value'] : $sd_params['social_discount_ok_like_value'];
 
 			$sd_params['social_discount_custom_enabled'] = isset($this->request->post['social_discount_custom_enabled']) && $this->request->post['social_discount_custom_enabled'] == 'on';
 			
@@ -281,6 +320,10 @@ function sd_userAction(soc, action) {
 				'social_discount_fb_like_value' => '',
 				'social_discount_gp_like_enabled' => false,
 				'social_discount_gp_like_value' => '',
+				'social_discount_mm_like_enabled' => false,
+				'social_discount_mm_like_value' => '',
+				'social_discount_ok_like_enabled' => false,
+				'social_discount_ok_like_value' => '',
 			);
 			// read settings from module
 			foreach ($sd_params as $sd_param_name => $value) {
@@ -345,7 +388,7 @@ function sd_userAction(soc, action) {
 				<tr>
 					<td>Facebook
 					<td>
-						<input type="checkbox" name="social_discount_fb_like_enabled" id="social_discount_fb_like_enabled"<?php echo $social_discount_fb_like_enabled ? ' checked="checked"' : ''; ?>/><label for="social_discount_vk_like_enabled">Like</label>
+						<input type="checkbox" name="social_discount_fb_like_enabled" id="social_discount_fb_like_enabled"<?php echo $social_discount_fb_like_enabled ? ' checked="checked"' : ''; ?>/><label for="social_discount_fb_like_enabled">Like</label>
 						<input type="text" name="social_discount_fb_like_value" value="<?php echo $social_discount_fb_like_value; ?>" size="1" />%
 					</td>
 					<td>
@@ -356,8 +399,30 @@ function sd_userAction(soc, action) {
 				<tr>
 					<td>Google Plus
 					<td>
-						<input type="checkbox" name="social_discount_gp_like_enabled" id="social_discount_gp_like_enabled"<?php echo $social_discount_gp_like_enabled ? ' checked="checked"' : ''; ?>/><label for="social_discount_vk_like_enabled">Like</label>
+						<input type="checkbox" name="social_discount_gp_like_enabled" id="social_discount_gp_like_enabled"<?php echo $social_discount_gp_like_enabled ? ' checked="checked"' : ''; ?>/><label for="social_discount_gp_like_enabled">Like</label>
 						<input type="text" name="social_discount_gp_like_value" value="<?php echo $social_discount_gp_like_value; ?>" size="1" />%
+					</td>
+					<td>
+						
+					</td>
+				</tr>
+				
+				<tr>
+					<td>Мой Мир
+					<td>
+						<input type="checkbox" name="social_discount_mm_like_enabled" id="social_discount_mm_like_enabled"<?php echo $social_discount_mm_like_enabled ? ' checked="checked"' : ''; ?>/><label for="social_discount_mm_like_enabled">Like</label>
+						<input type="text" name="social_discount_mm_like_value" value="<?php echo $social_discount_mm_like_value; ?>" size="1" />%
+					</td>
+					<td>
+						
+					</td>
+				</tr>
+				
+				<tr>
+					<td>Одноклассники
+					<td>
+						<input type="checkbox" name="social_discount_ok_like_enabled" id="social_discount_ok_like_enabled"<?php echo $social_discount_ok_like_enabled ? ' checked="checked"' : ''; ?>/><label for="social_discount_ok_like_enabled">Like</label>
+						<input type="text" name="social_discount_ok_like_value" value="<?php echo $social_discount_ok_like_value; ?>" size="1" />%
 					</td>
 					<td>
 						

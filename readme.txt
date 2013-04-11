@@ -5,8 +5,10 @@
 
 Список поддерживаемых соц сетей:
  * Вконтакте
- * Facebook.
- * Google Plus.
+ * Facebook
+ * Google Plus
+ * Мой Мир
+ * Одноклассники
  
 Возможности настройки:
  * Скидка считается либо от основной цены, либо от цены по акции.
@@ -25,6 +27,7 @@
   Для FB:  http://developers.facebook.com/docs/reference/plugins/like/, XFBML вариант
   Для Google Plus: https://developers.google.com/+/web/+1button/, в тег <g:plusone> добавьте атрибут callback="plusone_share", например:
      <g:plusone callback="plusone_share"></g:plusone>
+  Для Мой Мир и Одноклассники: http://api.mail.ru/sites/plugins/share/
   
 2. Установить VQMod (https://code.google.com/p/vqmod/), если он не установлен.
 Если его не установить, то изменения в файлах темы оформления, необходимые для работы данного модуля, нужно будет вносить вручную (описано ниже).

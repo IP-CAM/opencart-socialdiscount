@@ -68,6 +68,28 @@
 						
 					</td>
 				</tr>
+				
+				<tr>
+					<td>Мой Мир
+					<td>
+						<input type="checkbox" name="social_discount_mm_like_enabled" id="social_discount_mm_like_enabled"<?php echo $social_discount_mm_like_enabled ? ' checked="checked"' : ''; ?>/><label for="social_discount_mm_like_enabled">Like</label>
+						<input type="text" name="social_discount_mm_like_value" value="<?php echo $social_discount_mm_like_value; ?>" size="1" />%
+					</td>
+					<td>
+						
+					</td>
+				</tr>
+				
+				<tr>
+					<td>Одноклассники
+					<td>
+						<input type="checkbox" name="social_discount_ok_like_enabled" id="social_discount_ok_like_enabled"<?php echo $social_discount_ok_like_enabled ? ' checked="checked"' : ''; ?>/><label for="social_discount_ok_like_enabled">Like</label>
+						<input type="text" name="social_discount_ok_like_value" value="<?php echo $social_discount_ok_like_value; ?>" size="1" />%
+					</td>
+					<td>
+						
+					</td>
+				</tr>
 				</table>
 			</td>
           </tr>
