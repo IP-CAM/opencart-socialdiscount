@@ -94,7 +94,7 @@ mailru.loader.require('api', function(){
 function sd_userAction(soc, action) {
 	var product_id = <?php echo $product_id; ?>;
 	$.ajax({
-		url: '/index.php?route=module/social_discount/action',
+		url: '<?php echo $this->url->link('module/social_discount/action'); ?>',
 		type: 'POST',
 		dataType: 'json',
 		data: {
