@@ -103,7 +103,7 @@
             <td><?php echo $entry_discount_method; ?><br/><span class="help"><?php echo $entry_discount_method_help; ?></span></td>
             <td><select name="social_discount_discount_method">
 				<?php foreach ($discount_methods as $method_id => $method_name): ?>
-                <option value="1"<?php if ($social_discount_discount_method == $method_id) { echo ' selected="selected"'; } ?>><?php echo $method_name; ?></option>
+                <option value="<?php echo $method_id; ?>"<?php if ($social_discount_discount_method == $method_id) { echo ' selected="selected"'; } ?>><?php echo $method_name; ?></option>
 				<?php endforeach; ?>
               </select></td>
           </tr>
