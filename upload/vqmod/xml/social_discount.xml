@@ -1,6 +1,6 @@
 <modification>
-	<id>Social Discount VK</id>
-	<version>0.1</version>
+	<id>Social Discount</id>
+	<version>2.2</version>
 	<vqmver>2.0.0</vqmver>
 	<author>Gennady Telegin, support@itxd.ru</author>
 
@@ -104,20 +104,7 @@ function sd_userAction(soc, action) {
 		},
 		success: function(data) {
 			if (data['success']) {
-				if (data['percent'] > 0) {
-					$('#priceUpdate1').html(data['discount_price']);
-					$('#priceUpdate').addClass('price-old');
-					
-					if (data['social_discount']) {
-						$('#social_discount_active').show();
-					} else {
-						$('#social_discount_active').hide();
-					}
-				} else {
-					$('#priceUpdate').removeClass('price-old');
-					$('#priceUpdate1').html('');
-					$('#social_discount_active').hide();
-				}
+				sd_updateOffer(data);
 			}
 		}
 	});
@@ -125,35 +112,6 @@ function sd_userAction(soc, action) {
 </script>
 			]]></add>
 		</operation>
-		
-		<operation>
-            <search position="replace" index="1"><![CDATA[
-            <?php echo $price; ?>
-            ]]></search>
-            <add><![CDATA[
-			<span id="priceUpdate"><?php echo $price; ?></span><span class="price-new" id="priceUpdate1"></span>
-			]]></add>
-        </operation>
-		
-		<operation>
-            <search position="replace" index="1"><![CDATA[
-            <span class="price-old"><?php echo $price; ?></span> <span class="price-new"><?php echo $special; ?></span>
-            ]]></search>
-            <add><![CDATA[
-			<span class="price-old" id="priceUpdate"><?php echo $price; ?></span> <span class="price-new" id="priceUpdate1"><?php echo $special; ?></span>
-			]]></add>
-        </operation>
-		
-		<operation>
-			<search position="after"><![CDATA[
-			<span class="price-new"
-			]]></search>
-			<add><![CDATA[
-			
-			<div id="social_discount_active"<?php if ($social_discount == false) { echo ' style="display: none;"'; } else { echo ' style="display: inline-block"'; } ?>><?php echo $social_discount_active_mark; ?></div>
-			]]></add>
-		</operation>	
-		
 	</file>
 	
 	<file name="catalog/controller/product/product.php">
