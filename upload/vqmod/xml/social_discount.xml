@@ -156,44 +156,46 @@ function sd_userAction(soc, action) {
 				$discount_method = $this->config->get('social_discount_discount_method');
 				
 				$product = $this->__getProduct($product_id);
-					
-				$discount_percent = $this->model_catalog_social_discount->getDiscountPercentForProduct($product['product_id']);
-				
-				$product['social_discount'] = ($discount_percent > 0);
-				
-				if ($product['price'] > 0 && $product['special']) {
-					$special_percent = ($product['price'] - $product['special']) * 1.0 / $product['price'];
-				} else {
-					$special_percent = 0;
-				}
-				
-				if ($discount_percent > 0) {
-					switch ($discount_method) {
-					case 1: // special price
-						if ($product['special']) {
-							$special = $product['special'] * (1 - $discount_percent);
 
-							$product['social_discount_percent'] = sprintf("%.2f", $special_percent + $discount_percent);
+				if ($product) {
+					$discount_percent = $this->model_catalog_social_discount->getDiscountPercentForProduct($product['product_id']);
+					
+					$product['social_discount'] = ($discount_percent > 0);
+					
+					if ($product['price'] > 0 && $product['special']) {
+						$special_percent = ($product['price'] - $product['special']) * 1.0 / $product['price'];
+					} else {
+						$special_percent = 0;
+					}
+					
+					if ($discount_percent > 0) {
+						switch ($discount_method) {
+						case 1: // special price
+							if ($product['special']) {
+								$special = $product['special'] * (1 - $discount_percent);
+
+								$product['social_discount_percent'] = sprintf("%.2f", $special_percent + $discount_percent);
+								
+								break;
+							}
+						case 0: // base price
+							$product['social_discount_percent'] = $discount_percent;
+							
+							$discount_value = $product['price'] * $discount_percent;
+							
+							if ($product['special']) {
+								$special = $product['special'] - $discount_value;
+							} else {
+								$special = $product['price'] - $discount_value;
+							}
 							
 							break;
 						}
-					case 0: // base price
-						$product['social_discount_percent'] = $discount_percent;
-						
-						$discount_value = $product['price'] * $discount_percent;
-						
-						if ($product['special']) {
-							$special = $product['special'] - $discount_value;
-						} else {
-							$special = $product['price'] - $discount_value;
-						}
-						
-						break;
+					
+						$product['special'] = $special;
+					} else {
+						$product['social_discount_percent'] = $special_percent;
 					}
-				
-					$product['special'] = $special;
-				} else {
-					$product['social_discount_percent'] = $special_percent;
 				}
 				
 				return $product;
