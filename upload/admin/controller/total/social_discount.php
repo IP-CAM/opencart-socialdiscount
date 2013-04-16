@@ -183,6 +183,18 @@ class ControllerTotalSocialDiscount extends Controller {
 			$this->data['social_discount_ok_like_value'] = $this->config->get('social_discount_ok_like_value');
 		}
 		
+		if (isset($this->request->post['social_discount_tw_like_enabled'])) {
+			$this->data['social_discount_tw_like_enabled'] = $this->request->post['social_discount_tw_like_enabled'];
+		} else {
+			$this->data['social_discount_tw_like_enabled'] = $this->config->get('social_discount_tw_like_enabled');
+		}
+		
+		if (isset($this->request->post['social_discount_tw_like_value'])) {
+			$this->data['social_discount_tw_like_value'] = $this->request->post['social_discount_tw_like_value'];
+		} else {
+			$this->data['social_discount_tw_like_value'] = $this->config->get('social_discount_tw_like_value');
+		}
+		
 		$this->template = 'total/social_discount.tpl';
 		$this->children = array(
 			'common/header',

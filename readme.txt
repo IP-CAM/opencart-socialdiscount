@@ -9,6 +9,7 @@
  * Google Plus
  * Мой Мир
  * Одноклассники
+ * Twitter
  
 Возможности настройки:
  * Скидка считается либо от основной цены, либо от цены по акции.
@@ -17,7 +18,7 @@
  * К цене добавляется признак того, что скидка предоставлена за лайк. В админке можно задать, что именно выводить (может быть html с картинкой или прилипший div). Состояние признака обновляется динамически на странице.
  * Ограничение действия скидки по времени, например в одну неделю. По умолчанию без ограничения.
  
-По всем вопросам установки, настройки, поддержки и изменений в модулей обращайтесь по support@itxd.ru
+По всем вопросам установки, настройки, поддержки и изменений в модуле обращайтесь по support@itxd.ru
 
 Для установки модуля:
 1. Предварительно установите кнопку "Мне нравится" на страницу карточки товара. Для этого:
@@ -27,7 +28,19 @@
   Для FB:  http://developers.facebook.com/docs/reference/plugins/like/, XFBML вариант
   Для Google Plus: https://developers.google.com/+/web/+1button/, в тег <g:plusone> добавьте атрибут callback="plusone_share", например:
      <g:plusone callback="plusone_share"></g:plusone>
+	 Важно: согласно правилам Google (https://developers.google.com/+/web/buttons-policy) запрещено давать какие-либо ценности пользователю в обмен на нажатие кнопки +1. Включая эту опцию в данном модуле вы берете всю ответственность за этой действие на себя.	 
   Для Мой Мир и Одноклассники: http://api.mail.ru/sites/plugins/share/
+  Для Twitter (https://twitter.com/about/resources/buttons#tweet, https://dev.twitter.com/docs/intents/events) ипользуйте следующий код кнопки:
+  
+		<a href="https://twitter.com/share" class="twitter-share-button" >Tweet</a>
+		<script type="text/javascript" charset="utf-8">
+		  window.twttr = (function (d,s,id) {
+			var t, js, fjs = d.getElementsByTagName(s)[0];
+			if (d.getElementById(id)) return; js=d.createElement(s); js.id=id;
+			js.src="//platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs);
+			return window.twttr || (t = { _e: [], ready: function(f){ t._e.push(f) } });
+		  }(document, "script", "twitter-wjs"));
+		</script>
   
 2. Установить VQMod (https://code.google.com/p/vqmod/), если он не установлен.
 Если его не установить, то изменения в файлах темы оформления, необходимые для работы данного модуля, нужно будет вносить вручную (описано ниже).

@@ -11,6 +11,17 @@ $_['entry_status']     = 'Status:';
 $_['entry_discount_value'] = 'Discount:';
 $_['entry_sort_order'] = 'Sort Order:';
 
+$_['entry_discount_lifetime'] = 'Discount lifetime:';
+$_['entry_discount_lifetime_help'] = 'In seconds. For example: for one week you should write 604800 (60*60*24*7). 0 defines no limit.';
+
+$_['entry_discount_method'] = 'Discount calculate method:';
+$_['entry_discount_method_help'] = 'By default, discount is calculated from main product price and sum with current special.<br/>In case of main price is fictive you should use calculation "from special price".';
+
+$_['entry_discount_active_mark'] = 'Social discount mark';
+$_['entry_discount_active_mark_help'] = 'Will add for price in case of active social discount.';
+$_['entry_default_discount_active_mark'] = '(social discount)';
+
+
 // Error
 $_['error_permission'] = 'Warning: You do not have permission to modify social-discount total!';
 ?>

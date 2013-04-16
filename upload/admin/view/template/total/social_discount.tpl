@@ -38,11 +38,11 @@
 				<table class="list" style="width: 350px;">
 				<tr>
 					<td>VK
-					<td>
+					<td nowrap>
 						<input type="checkbox" name="social_discount_vk_like_enabled" id="social_discount_vk_like_enabled"<?php echo $social_discount_vk_like_enabled ? ' checked="checked"' : ''; ?>/><label for="social_discount_vk_like_enabled">Like</label>
 						<input type="text" name="social_discount_vk_like_value" value="<?php echo $social_discount_vk_like_value; ?>" size="1" />%
 					</td>
-					<td>
+					<td nowrap>
 						<input type="checkbox" name="social_discount_vk_share_enabled" id="social_discount_vk_share_enabled"<?php echo $social_discount_vk_share_enabled ? ' checked="checked"' : ''; ?>/><label for="social_discount_vk_share_enabled">Share</label>
 						<input type="text" name="social_discount_vk_share_value" value="<?php echo $social_discount_vk_share_value; ?>" size="1" />%
 					</td>
@@ -90,6 +90,18 @@
 						
 					</td>
 				</tr>
+				
+				<tr>
+					<td>Twitter
+					<td>
+						<input type="checkbox" name="social_discount_tw_like_enabled" id="social_discount_tw_like_enabled"<?php echo $social_discount_tw_like_enabled ? ' checked="checked"' : ''; ?>/><label for="social_discount_tw_like_enabled">Like</label>
+						<input type="text" name="social_discount_tw_like_value" value="<?php echo $social_discount_tw_like_value; ?>" size="1" />%
+					</td>
+					<td>
+						
+					</td>
+				</tr>
+				
 				</table>
 			</td>
           </tr>
