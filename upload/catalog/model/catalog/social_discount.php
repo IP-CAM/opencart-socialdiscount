@@ -149,7 +149,7 @@ class ModelCatalogSocialDiscount extends Model {
 		return $result;
 	}
 
-	private function getCustomSocialDiscount($product_id) {
+	public function getCustomSocialDiscount($product_id) {
 		$this->checkTables();
 		
 		$results = $this->db->query('SELECT * FROM ' . DB_PREFIX . 'social_discount WHERE product_id = ' . (int)$product_id . ' LIMIT 1');

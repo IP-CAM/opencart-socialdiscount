@@ -129,15 +129,43 @@ function sd_userAction(soc, action) {
 			]]></search>
 			<add><![CDATA[
 			$this->load->model('catalog/social_discount');
-			$discount_percent = $this->model_catalog_social_discount->getDiscountPercentForProduct($product_info['product_id']);
 			
-			$this->data['social_discount_vk_like_enabled']  = $this->config->get('social_discount_vk_like_enabled');
-			$this->data['social_discount_vk_share_enabled'] = $this->config->get('social_discount_vk_share_enabled');
-			$this->data['social_discount_fb_like_enabled']  = $this->config->get('social_discount_fb_like_enabled');
-			$this->data['social_discount_gp_like_enabled']  = $this->config->get('social_discount_gp_like_enabled');
-			$this->data['social_discount_mm_like_enabled']  = $this->config->get('social_discount_mm_like_enabled');
-			$this->data['social_discount_ok_like_enabled']  = $this->config->get('social_discount_ok_like_enabled');
-			$this->data['social_discount_tw_like_enabled']  = $this->config->get('social_discount_tw_like_enabled');
+			$sd_params = array (
+				'social_discount_vk_like_enabled' => false,
+				'social_discount_vk_like_value' => '',
+				'social_discount_vk_share_enabled' => false,
+				'social_discount_vk_share_value' => '',
+				'social_discount_fb_like_enabled' => false,
+				'social_discount_fb_like_value' => '',
+				'social_discount_gp_like_enabled' => false,
+				'social_discount_gp_like_value' => '',
+				'social_discount_mm_like_enabled' => false,
+				'social_discount_mm_like_value' => '',
+				'social_discount_ok_like_enabled' => false,
+				'social_discount_ok_like_value' => '',
+				'social_discount_tw_like_enabled' => false,
+				'social_discount_tw_like_value' => '',
+			);
+			// read settings from module
+			foreach ($sd_params as $sd_param_name => $value) {
+				$sd_params[$sd_param_name] = $this->config->get($sd_param_name);
+			}
+			
+			$sd_params['social_discount_custom_enabled'] = false; // default value
+			
+			// get current custom settings for product
+			$this->load->model('catalog/social_discount');
+			
+			if (isset($this->request->get['product_id'])) {
+				$sd_custom = $this->model_catalog_social_discount->getCustomSocialDiscount($this->request->get['product_id']);
+			
+				if ($sd_custom && $sd_custom['social_discount_custom_enabled']) {
+					$sd_params = array_merge($sd_params, $sd_custom);
+				}
+			}
+			
+			// set values for template
+			$this->data = array_merge($this->data, $sd_params);
 			
 			$this->data['social_discount_active_mark'] = $this->config->get('social_discount_active_mark');
 			]]></add>
@@ -255,13 +283,13 @@ function sd_userAction(soc, action) {
 			}
 		
 			// save differences in POST
-			$sd_params['social_discount_vk_like_enabled']  = isset($this->request->post['social_discount_vk_like_enabled'])  ? $this->request->post['social_discount_vk_like_enabled'] == 'on'  : $sd_params['social_discount_vk_like_enabled'];
-			$sd_params['social_discount_vk_share_enabled'] = isset($this->request->post['social_discount_vk_share_enabled']) ? $this->request->post['social_discount_vk_share_enabled'] == 'on' : $sd_params['social_discount_vk_share_enabled'];
-			$sd_params['social_discount_fb_like_enabled']  = isset($this->request->post['social_discount_fb_like_enabled'])  ? $this->request->post['social_discount_fb_like_enabled'] == 'on'  : $sd_params['social_discount_fb_like_enabled'];
-			$sd_params['social_discount_gp_like_enabled']  = isset($this->request->post['social_discount_gp_like_enabled'])  ? $this->request->post['social_discount_gp_like_enabled'] == 'on'  : $sd_params['social_discount_gp_like_enabled'];
-			$sd_params['social_discount_mm_like_enabled']  = isset($this->request->post['social_discount_mm_like_enabled'])  ? $this->request->post['social_discount_mm_like_enabled'] == 'on'  : $sd_params['social_discount_mm_like_enabled'];
-			$sd_params['social_discount_ok_like_enabled']  = isset($this->request->post['social_discount_ok_like_enabled'])  ? $this->request->post['social_discount_ok_like_enabled'] == 'on'  : $sd_params['social_discount_ok_like_enabled'];
-			$sd_params['social_discount_tw_like_enabled']  = isset($this->request->post['social_discount_tw_like_enabled'])  ? $this->request->post['social_discount_tw_like_enabled'] == 'on'  : $sd_params['social_discount_tw_like_enabled'];
+			$sd_params['social_discount_vk_like_enabled']  = isset($this->request->post['social_discount_vk_like_enabled'])  && $this->request->post['social_discount_vk_like_enabled'] == 'on';
+			$sd_params['social_discount_vk_share_enabled'] = isset($this->request->post['social_discount_vk_share_enabled']) && $this->request->post['social_discount_vk_share_enabled'] == 'on';
+			$sd_params['social_discount_fb_like_enabled']  = isset($this->request->post['social_discount_fb_like_enabled'])  && $this->request->post['social_discount_fb_like_enabled'] == 'on';
+			$sd_params['social_discount_gp_like_enabled']  = isset($this->request->post['social_discount_gp_like_enabled'])  && $this->request->post['social_discount_gp_like_enabled'] == 'on';
+			$sd_params['social_discount_mm_like_enabled']  = isset($this->request->post['social_discount_mm_like_enabled'])  && $this->request->post['social_discount_mm_like_enabled'] == 'on';
+			$sd_params['social_discount_ok_like_enabled']  = isset($this->request->post['social_discount_ok_like_enabled'])  && $this->request->post['social_discount_ok_like_enabled'] == 'on';
+			$sd_params['social_discount_tw_like_enabled']  = isset($this->request->post['social_discount_tw_like_enabled'])  && $this->request->post['social_discount_tw_like_enabled'] == 'on';
 			
 			$sd_params['social_discount_vk_like_value'] = isset($this->request->post['social_discount_vk_like_value']) ? $this->request->post['social_discount_vk_like_value'] : $sd_params['social_discount_vk_like_value'];
 			$sd_params['social_discount_vk_share_value'] = isset($this->request->post['social_discount_vk_share_value']) ? $this->request->post['social_discount_vk_share_value'] : $sd_params['social_discount_vk_share_value'];
@@ -271,7 +299,7 @@ function sd_userAction(soc, action) {
 			$sd_params['social_discount_ok_like_value'] = isset($this->request->post['social_discount_ok_like_value']) ? $this->request->post['social_discount_ok_like_value'] : $sd_params['social_discount_ok_like_value'];
 			$sd_params['social_discount_tw_like_value'] = isset($this->request->post['social_discount_tw_like_value']) ? $this->request->post['social_discount_tw_like_value'] : $sd_params['social_discount_tw_like_value'];
 
-			$sd_params['social_discount_custom_enabled'] = isset($this->request->post['social_discount_custom_enabled']) ? $this->request->post['social_discount_custom_enabled'] == 'on' : $sd_params['social_discount_custom_enabled'];
+			$sd_params['social_discount_custom_enabled'] = isset($this->request->post['social_discount_custom_enabled']) && $this->request->post['social_discount_custom_enabled'] == 'on';
 			
 			if ($sd_params['social_discount_custom_enabled'] || $sd_custom['social_discount_custom_enabled']) {
 				$this->model_catalog_social_discount->setCustomSocialDiscount($this->request->get['product_id'], $sd_params);
@@ -478,8 +506,8 @@ function sd_userAction(soc, action) {
 				<tr>
 					<td>Twitter
 					<td>
-						<input type="checkbox" name="social_discount_ok_like_enabled" id="social_discount_ok_like_enabled"<?php echo $social_discount_tw_like_enabled ? ' checked="checked"' : ''; ?>/><label for="social_discount_tw_like_enabled">Like</label>
-						<input type="text" name="social_discount_ok_like_value" value="<?php echo $social_discount_tw_like_value; ?>" size="1" />%
+						<input type="checkbox" name="social_discount_tw_like_enabled" id="social_discount_ok_like_enabled"<?php echo $social_discount_tw_like_enabled ? ' checked="checked"' : ''; ?>/><label for="social_discount_tw_like_enabled">Like</label>
+						<input type="text" name="social_discount_tw_like_value" value="<?php echo $social_discount_tw_like_value; ?>" size="1" />%
 					</td>
 					<td>
 						
