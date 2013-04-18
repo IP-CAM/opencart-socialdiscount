@@ -3,8 +3,7 @@
 $_['heading_title']    = 'Social Discount';
 
 // Text
-$_['text_total']       = 'Order Totals';
-$_['text_success']     = 'Success: You have modified sub-total total!';
+$_['text_success']     = 'Success: You have modified social-discount total!';
 
 // Entry
 $_['entry_status']     = 'Status:';
@@ -18,8 +17,8 @@ $_['entry_discount_method'] = 'Discount calculate method:';
 $_['entry_discount_method_help'] = 'By default, discount is calculated from main product price and sum with current special.<br/>In case of main price is fictive you should use calculation "from special price".';
 
 $_['entry_discount_active_mark'] = 'Social discount mark';
-$_['entry_discount_active_mark_help'] = 'Will add for price in case of active social discount.';
-$_['entry_default_discount_active_mark'] = '(social discount)';
+$_['entry_discount_active_mark_help'] = 'Is added for price in case of active social discount.';
+$_['entry_default_discount_active_mark'] = '(discount for a like)';
 
 
 // Error
