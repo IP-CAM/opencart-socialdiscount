@@ -206,27 +206,39 @@ function sd_userAction(soc, action) {
 					}
 					
 					if ($discount_percent > 0) {
-						switch ($discount_method) {
-						case 1: // special price
-							if ($product['special']) {
-								$special = $product['special'] * (1 - $discount_percent);
+						$discount_type = $this->config->get('social_discount_discount_type');
+						
+						if ($discount_type == 1) {
+							if ($product['special'] && $discount_method == 1) {
+								$special = $product['special'] - $discount_percent*100;
+							} else {
+								$special = $product['price'] - $discount_percent*100;
+							}
+							
+							$product['social_discount_percent'] = $discount_percent * 100.0 / $product['price'];
+						} else {
+							switch ($discount_method) {
+							case 1: // special price
+								if ($product['special']) {
+									$special = $product['special'] * (1 - $discount_percent);
 
-								$product['social_discount_percent'] = sprintf("%.2f", $special_percent + $discount_percent);
+									$product['social_discount_percent'] = sprintf("%.2f", $special_percent + $discount_percent);
+									
+									break;
+								}
+							case 0: // base price
+								$product['social_discount_percent'] = $discount_percent;
+								
+								$discount_value = $product['price'] * $discount_percent;
+								
+								if ($product['special']) {
+									$special = $product['special'] - $discount_value;
+								} else {
+									$special = $product['price'] - $discount_value;
+								}
 								
 								break;
 							}
-						case 0: // base price
-							$product['social_discount_percent'] = $discount_percent;
-							
-							$discount_value = $product['price'] * $discount_percent;
-							
-							if ($product['special']) {
-								$special = $product['special'] - $discount_value;
-							} else {
-								$special = $product['price'] - $discount_value;
-							}
-							
-							break;
 						}
 					
 						$product['special'] = $special;
@@ -351,6 +363,21 @@ function sd_userAction(soc, action) {
 			// set values for template
 			$this->data = array_merge($this->data, $sd_params);
 			// }}}
+			
+			if (isset($this->request->post['social_discount_discount_type'])) {
+				$this->data['social_discount_discount_type'] = $this->request->post['social_discount_discount_type'];
+			} else {
+				$this->data['social_discount_discount_type'] = (int)$this->config->get('social_discount_discount_type');
+			}
+			
+			switch ($this->data['social_discount_discount_type']) {
+			case 0:
+				$this->data['social_discount_type_sign'] = '%';
+				break;
+			case 1:
+				$this->data['social_discount_type_sign'] = $this->config->get('config_currency');
+				break;
+			}
 			]]></add>
 		</operation>
 	</file>
@@ -447,23 +474,26 @@ function sd_userAction(soc, action) {
 			  });
 			  </script>
 			  
-			  <table id="social_discount_params" class="list" style="width: 350px; margin-top: 15px;">
+			  <table id="social_discount_params" class="list" style="width: 450px; margin-top: 15px;">
 				<tr>
-					<td>VK
+					<td width="140">VK
 					<td>
 						<input type="checkbox" name="social_discount_vk_like_enabled" id="social_discount_vk_like_enabled"<?php echo $social_discount_vk_like_enabled ? ' checked="checked"' : ''; ?>/><label for="social_discount_vk_like_enabled">Like</label>
-						<input type="text" name="social_discount_vk_like_value" value="<?php echo $social_discount_vk_like_value; ?>" size="1" />%
+						<input type="text" name="social_discount_vk_like_value" value="<?php echo $social_discount_vk_like_value; ?>" size="1" />
+						<span class="sd_type"><?php echo $social_discount_type_sign; ?></span>
 					</td>
 					<td>
 						<input type="checkbox" name="social_discount_vk_share_enabled" id="social_discount_vk_share_enabled"<?php echo $social_discount_vk_share_enabled ? ' checked="checked"' : ''; ?>/><label for="social_discount_vk_share_enabled">Share</label>
-						<input type="text" name="social_discount_vk_share_value" value="<?php echo $social_discount_vk_share_value; ?>" size="1" />%
+						<input type="text" name="social_discount_vk_share_value" value="<?php echo $social_discount_vk_share_value; ?>" size="1" />
+						<span class="sd_type"><?php echo $social_discount_type_sign; ?></span>
 					</td>
 				</tr>
 				<tr>
-					<td>Facebook
+					<td width="140">Facebook
 					<td>
 						<input type="checkbox" name="social_discount_fb_like_enabled" id="social_discount_fb_like_enabled"<?php echo $social_discount_fb_like_enabled ? ' checked="checked"' : ''; ?>/><label for="social_discount_fb_like_enabled">Like</label>
-						<input type="text" name="social_discount_fb_like_value" value="<?php echo $social_discount_fb_like_value; ?>" size="1" />%
+						<input type="text" name="social_discount_fb_like_value" value="<?php echo $social_discount_fb_like_value; ?>" size="1" />
+						<span class="sd_type"><?php echo $social_discount_type_sign; ?></span>
 					</td>
 					<td>
 						
@@ -471,10 +501,11 @@ function sd_userAction(soc, action) {
 				</tr>
 				
 				<tr>
-					<td>Google Plus
+					<td width="140">Google Plus
 					<td>
 						<input type="checkbox" name="social_discount_gp_like_enabled" id="social_discount_gp_like_enabled"<?php echo $social_discount_gp_like_enabled ? ' checked="checked"' : ''; ?>/><label for="social_discount_gp_like_enabled">Like</label>
-						<input type="text" name="social_discount_gp_like_value" value="<?php echo $social_discount_gp_like_value; ?>" size="1" />%
+						<input type="text" name="social_discount_gp_like_value" value="<?php echo $social_discount_gp_like_value; ?>" size="1" />
+						<span class="sd_type"><?php echo $social_discount_type_sign; ?></span>
 					</td>
 					<td>
 						
@@ -482,10 +513,11 @@ function sd_userAction(soc, action) {
 				</tr>
 				
 				<tr>
-					<td>Мой Мир
+					<td width="140">Мой Мир
 					<td>
 						<input type="checkbox" name="social_discount_mm_like_enabled" id="social_discount_mm_like_enabled"<?php echo $social_discount_mm_like_enabled ? ' checked="checked"' : ''; ?>/><label for="social_discount_mm_like_enabled">Like</label>
-						<input type="text" name="social_discount_mm_like_value" value="<?php echo $social_discount_mm_like_value; ?>" size="1" />%
+						<input type="text" name="social_discount_mm_like_value" value="<?php echo $social_discount_mm_like_value; ?>" size="1" />
+						<span class="sd_type"><?php echo $social_discount_type_sign; ?></span>
 					</td>
 					<td>
 						
@@ -493,10 +525,11 @@ function sd_userAction(soc, action) {
 				</tr>
 				
 				<tr>
-					<td>Одноклассники
+					<td width="140">Одноклассники
 					<td>
 						<input type="checkbox" name="social_discount_ok_like_enabled" id="social_discount_ok_like_enabled"<?php echo $social_discount_ok_like_enabled ? ' checked="checked"' : ''; ?>/><label for="social_discount_ok_like_enabled">Like</label>
-						<input type="text" name="social_discount_ok_like_value" value="<?php echo $social_discount_ok_like_value; ?>" size="1" />%
+						<input type="text" name="social_discount_ok_like_value" value="<?php echo $social_discount_ok_like_value; ?>" size="1" />
+						<span class="sd_type"><?php echo $social_discount_type_sign; ?></span>
 					</td>
 					<td>
 						
@@ -504,10 +537,11 @@ function sd_userAction(soc, action) {
 				</tr>
 				
 				<tr>
-					<td>Twitter
+					<td width="140">Twitter
 					<td>
 						<input type="checkbox" name="social_discount_tw_like_enabled" id="social_discount_ok_like_enabled"<?php echo $social_discount_tw_like_enabled ? ' checked="checked"' : ''; ?>/><label for="social_discount_tw_like_enabled">Like</label>
-						<input type="text" name="social_discount_tw_like_value" value="<?php echo $social_discount_tw_like_value; ?>" size="1" />%
+						<input type="text" name="social_discount_tw_like_value" value="<?php echo $social_discount_tw_like_value; ?>" size="1" />
+						<span class="sd_type"><?php echo $social_discount_type_sign; ?></span>
 					</td>
 					<td>
 						

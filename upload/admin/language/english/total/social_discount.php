@@ -20,6 +20,9 @@ $_['entry_discount_active_mark'] = 'Social discount mark';
 $_['entry_discount_active_mark_help'] = 'Is added for price in case of active social discount.';
 $_['entry_default_discount_active_mark'] = '(discount for a like)';
 
+$_['entry_discount_type']         = 'Discount type';
+$_['enty_social_discount_type_0'] = 'Percent (%)';
+$_['enty_social_discount_type_1'] = 'Fixed (%s)';
 
 // Error
 $_['error_permission'] = 'Warning: You do not have permission to modify social-discount total!';

@@ -35,23 +35,26 @@
 		  <tr>
             <td><?php echo $entry_discount_value; ?></td>
             <td>
-				<table class="list" style="width: 350px;">
+				<table class="list" style="width: 450px;">
 				<tr>
-					<td>VK
+					<td width="140">VK
 					<td nowrap>
 						<input type="checkbox" name="social_discount_vk_like_enabled" id="social_discount_vk_like_enabled"<?php echo $social_discount_vk_like_enabled ? ' checked="checked"' : ''; ?>/><label for="social_discount_vk_like_enabled">Like</label>
-						<input type="text" name="social_discount_vk_like_value" value="<?php echo $social_discount_vk_like_value; ?>" size="1" />%
+						<input type="text" name="social_discount_vk_like_value" value="<?php echo $social_discount_vk_like_value; ?>" size="1" />
+						<span class="sd_type"><?php echo $social_discount_type_sign; ?></span>
 					</td>
 					<td nowrap>
 						<input type="checkbox" name="social_discount_vk_share_enabled" id="social_discount_vk_share_enabled"<?php echo $social_discount_vk_share_enabled ? ' checked="checked"' : ''; ?>/><label for="social_discount_vk_share_enabled">Share</label>
-						<input type="text" name="social_discount_vk_share_value" value="<?php echo $social_discount_vk_share_value; ?>" size="1" />%
+						<input type="text" name="social_discount_vk_share_value" value="<?php echo $social_discount_vk_share_value; ?>" size="1" />
+						<span class="sd_type"><?php echo $social_discount_type_sign; ?></span>
 					</td>
 				</tr>
 				<tr>
-					<td>Facebook
+					<td width="140">Facebook
 					<td>
 						<input type="checkbox" name="social_discount_fb_like_enabled" id="social_discount_fb_like_enabled"<?php echo $social_discount_fb_like_enabled ? ' checked="checked"' : ''; ?>/><label for="social_discount_vk_like_enabled">Like</label>
-						<input type="text" name="social_discount_fb_like_value" value="<?php echo $social_discount_fb_like_value; ?>" size="1" />%
+						<input type="text" name="social_discount_fb_like_value" value="<?php echo $social_discount_fb_like_value; ?>" size="1" />
+						<span class="sd_type"><?php echo $social_discount_type_sign; ?></span>
 					</td>
 					<td>
 						
@@ -59,10 +62,11 @@
 				</tr>
 				
 				<tr>
-					<td>Google Plus
+					<td width="140">Google Plus
 					<td>
 						<input type="checkbox" name="social_discount_gp_like_enabled" id="social_discount_gp_like_enabled"<?php echo $social_discount_gp_like_enabled ? ' checked="checked"' : ''; ?>/><label for="social_discount_vk_like_enabled">Like</label>
-						<input type="text" name="social_discount_gp_like_value" value="<?php echo $social_discount_gp_like_value; ?>" size="1" />%
+						<input type="text" name="social_discount_gp_like_value" value="<?php echo $social_discount_gp_like_value; ?>" size="1" />
+						<span class="sd_type"><?php echo $social_discount_type_sign; ?></span>
 					</td>
 					<td>
 						
@@ -70,10 +74,11 @@
 				</tr>
 				
 				<tr>
-					<td>Мой Мир
+					<td width="140">Мой Мир
 					<td>
 						<input type="checkbox" name="social_discount_mm_like_enabled" id="social_discount_mm_like_enabled"<?php echo $social_discount_mm_like_enabled ? ' checked="checked"' : ''; ?>/><label for="social_discount_mm_like_enabled">Like</label>
-						<input type="text" name="social_discount_mm_like_value" value="<?php echo $social_discount_mm_like_value; ?>" size="1" />%
+						<input type="text" name="social_discount_mm_like_value" value="<?php echo $social_discount_mm_like_value; ?>" size="1" />
+						<span class="sd_type"><?php echo $social_discount_type_sign; ?></span>
 					</td>
 					<td>
 						
@@ -81,10 +86,11 @@
 				</tr>
 				
 				<tr>
-					<td>Одноклассники
+					<td width="140">Одноклассники
 					<td>
 						<input type="checkbox" name="social_discount_ok_like_enabled" id="social_discount_ok_like_enabled"<?php echo $social_discount_ok_like_enabled ? ' checked="checked"' : ''; ?>/><label for="social_discount_ok_like_enabled">Like</label>
-						<input type="text" name="social_discount_ok_like_value" value="<?php echo $social_discount_ok_like_value; ?>" size="1" />%
+						<input type="text" name="social_discount_ok_like_value" value="<?php echo $social_discount_ok_like_value; ?>" size="1" />
+						<span class="sd_type"><?php echo $social_discount_type_sign; ?></span>
 					</td>
 					<td>
 						
@@ -92,10 +98,11 @@
 				</tr>
 				
 				<tr>
-					<td>Twitter
+					<td width="140">Twitter
 					<td>
 						<input type="checkbox" name="social_discount_tw_like_enabled" id="social_discount_tw_like_enabled"<?php echo $social_discount_tw_like_enabled ? ' checked="checked"' : ''; ?>/><label for="social_discount_tw_like_enabled">Like</label>
-						<input type="text" name="social_discount_tw_like_value" value="<?php echo $social_discount_tw_like_value; ?>" size="1" />%
+						<input type="text" name="social_discount_tw_like_value" value="<?php echo $social_discount_tw_like_value; ?>" size="1" />
+						<span class="sd_type"><?php echo $social_discount_type_sign; ?></span>
 					</td>
 					<td>
 						
@@ -105,6 +112,15 @@
 				</table>
 			</td>
           </tr>
+		  
+		   <tr>
+            <td><?php echo $entry_discount_type; ?><br/></td>
+            <td><select name="social_discount_discount_type" id="social_discount_discount_type">
+                <option value="0"<?php if ($social_discount_discount_type == 0) { echo ' selected="selected"'; } ?>><?php echo $enty_social_discount_type_0; ?></option>
+				<option value="1"<?php if ($social_discount_discount_type == 1) { echo ' selected="selected"'; } ?>><?php echo $enty_social_discount_type_1; ?></option>
+              </select></td>
+          </tr>
+		  
 		  
 		  <tr>
             <td><?php echo $entry_discount_lifetime; ?><br/><span class="help"><?php echo $entry_discount_lifetime_help; ?></span></td>
@@ -130,4 +146,19 @@
     </div>
   </div>
 </div>
+
+<script>
+$(document).ready(function() {
+	$('#social_discount_discount_type').change(function() {
+		switch ( $(this).val() ) {
+		case "0":
+			$('.sd_type').html('%');
+			break;
+		case "1":
+			$('.sd_type').html('<?php echo $this->config->get('config_currency'); ?>');
+			break;
+		}
+	});
+});
+</script>
 <?php echo $footer; ?>

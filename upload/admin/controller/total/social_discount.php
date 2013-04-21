@@ -26,6 +26,10 @@ class ControllerTotalSocialDiscount extends Controller {
 		$this->data['entry_discount_method'] = $this->language->get('entry_discount_method');
 		$this->data['entry_discount_method_help'] = $this->language->get('entry_discount_method_help');
 		
+		$this->data['entry_discount_type'] = $this->language->get('entry_discount_type');
+		$this->data['enty_social_discount_type_0'] = $this->language->get('enty_social_discount_type_0');
+		$this->data['enty_social_discount_type_1'] = sprintf($this->language->get('enty_social_discount_type_1'), $this->config->get('config_currency'));
+		
 		$this->data['entry_discount_lifetime'] = $this->language->get('entry_discount_lifetime');
 		$this->data['entry_discount_lifetime_help'] = $this->language->get('entry_discount_lifetime_help');
 		
@@ -100,6 +104,21 @@ class ControllerTotalSocialDiscount extends Controller {
 			0 => 'Скидка с основной цены',
 			1 => 'Скидка с акции',
 		);
+		
+		if (isset($this->request->post['social_discount_discount_type'])) {
+			$this->data['social_discount_discount_type'] = $this->request->post['social_discount_discount_type'];
+		} else {
+			$this->data['social_discount_discount_type'] = (int)$this->config->get('social_discount_discount_type');
+		}
+		
+		switch ($this->data['social_discount_discount_type']) {
+		case 0:
+			$this->data['social_discount_type_sign'] = '%';
+			break;
+		case 1:
+			$this->data['social_discount_type_sign'] = $this->config->get('config_currency');
+			break;
+		}
 		
 		if (isset($this->request->post['social_discount_active_mark'])) {
 			$this->data['social_discount_active_mark'] = $this->request->post['social_discount_active_mark'];

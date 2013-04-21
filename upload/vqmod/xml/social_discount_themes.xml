@@ -17,7 +17,7 @@ function sd_updateOffer(data) {
 		$('#priceUpdate').addClass('price-old');
 		
 		if (data['social_discount']) {
-			$('#social_discount_active').show();
+			$('#social_discount_active').show().css('display', 'inline-block');
 		} else {
 			$('#social_discount_active').hide();
 		}

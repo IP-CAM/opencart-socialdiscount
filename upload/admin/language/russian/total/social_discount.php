@@ -20,6 +20,10 @@ $_['entry_discount_active_mark'] = 'Признак цены со скидкой'
 $_['entry_discount_active_mark_help'] = 'Добавляется рядом со скидкой в карточке товара, если она дана за лайк';
 $_['entry_default_discount_active_mark'] = '(скидка за лайк)';
 
+$_['entry_discount_type']         = 'Тип скидки';
+$_['enty_social_discount_type_0'] = 'Процент (%)';
+$_['enty_social_discount_type_1'] = 'Фиксированная (%s)';
+
 // Error
 $_['error_permission'] = 'У Вас нет прав для управления этим модулем!';
 ?>
