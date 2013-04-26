@@ -156,7 +156,7 @@ class ModelCatalogSocialDiscount extends Model {
 				} else {
 					switch ($discount_method) {
 					case 1: // special price
-						if ($product['special']) {
+						if (isset($product['special'])) {
 							$discount_value = $product['special'] * $discount_percent;
 							
 							break;
@@ -179,6 +179,65 @@ class ModelCatalogSocialDiscount extends Model {
 		$discount = $this->readCookie();
 		
 		return $this->_getDiscountForProduct($discount, $product);
+	}
+	
+	public function updateProductSpecial(& $product) {
+		$discount_method = $this->config->get('social_discount_discount_method');
+		$discount_type = $this->config->get('social_discount_discount_type');
+		
+		if ($product) {
+			$discount_value = $this->getDiscountForProduct($product);
+			
+			//die($discount_value);
+			$product['social_discount'] = ($discount_value > 0);
+			
+			if ($product['price'] > 0 && isset($product['special'])) {
+				$special_percent = ($product['price'] - $product['special']) * 1.0 / $product['price'];
+			} else {
+				$special_percent = 0;
+			}
+			
+			if ($discount_value > 0) {
+				if ($discount_type == 1) {
+					if (isset($product['special']) && $discount_method == 1) {
+						$special = $product['special'] - $discount_value;
+					} else {
+						$special = $product['price'] - $discount_value;
+					}
+					
+					$product['social_discount_percent'] = $discount_value / $product['price'];
+				} else {
+					switch ($discount_method) {
+					case 1: // special price
+						if ($product['special']) {
+							$special = $product['special'] - $discount_value;
+							$discount_percent = $discount_value * 1.0 / $product['special'];
+							
+							$product['social_discount_percent'] = sprintf("%.2f", $special_percent + $discount_percent);
+							
+							break;
+						}
+					case 0: // base price
+						$discount_percent = $discount_value *1.0 / $product['price'];
+						$product['social_discount_percent'] = $discount_percent;
+						
+						if ($product['special']) {
+							$special = $product['special'] - $discount_value;
+						} else {
+							$special = $product['price'] - $discount_value;
+						}
+						
+						break;
+					}
+				}
+			
+				$product['special'] = $special;
+			} else {
+				$product['social_discount_percent'] = $special_percent;
+			}
+		}
+		
+		return $product;
 	}
 	
 	public function getDiscount($products) {

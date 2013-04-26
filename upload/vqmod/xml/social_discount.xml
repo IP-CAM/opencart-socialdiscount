@@ -171,87 +171,74 @@ function sd_userAction(soc, action) {
 			]]></add>
 		</operation>
 		
-		
 		<operation>
 			<search position="after"><![CDATA[
 			if ($product_info) {
 			]]></search>
 			<add><![CDATA[
+			$this->load->model('catalog/social_discount');
+			$this->model_catalog_social_discount->updateProductSpecial($product_info);
+				
 			$this->data['social_discount'] = $product_info['social_discount'];
 			]]></add>
 		</operation>
 	</file>
 	
-	<file name="catalog/model/catalog/product.php">
+	<file name="catalog/controller/product/category.php,catalog/controller/product/search.php,catalog/controller/product/manufacturer.php,catalog/controller/module/latest.php">
 		<operation>
-			<search position="replace"><![CDATA[
-			public function getProduct($product_id) {
+			<search position="after"><![CDATA[
+			$results = $this->model_catalog_product->getProducts
 			]]></search>
 			<add><![CDATA[
-			public function getProduct($product_id) {
-				$this->load->model('catalog/social_discount');
-				
-				$discount_method = $this->config->get('social_discount_discount_method');
-				$discount_type = $this->config->get('social_discount_discount_type');
-				
-				$product = $this->__getProduct($product_id);
-				
-				if ($product) {
-					$discount_value = $this->model_catalog_social_discount->getDiscountForProduct($product);
-					$product['social_discount'] = ($discount_value > 0);
-					
-					if ($product['price'] > 0 && isset($product['special'])) {
-						$special_percent = ($product['price'] - $product['special']) * 1.0 / $product['price'];
-					} else {
-						$special_percent = 0;
-					}
-					
-					if ($discount_value > 0) {
-						if ($discount_type == 1) {
-							if (isset($product['special']) && $discount_method == 1) {
-								$special = $product['special'] - $discount_value;
-							} else {
-								$special = $product['price'] - $discount_value;
-							}
-							
-							$product['social_discount_percent'] = $discount_value / $product['price'];
-						} else {
-							switch ($discount_method) {
-							case 1: // special price
-								if ($product['special']) {
-									$special = $product['special'] - $discount_value;
-									$discount_percent = $discount_value * 1.0 / $product['price'];
-									
-									$product['social_discount_percent'] = sprintf("%.2f", $special_percent + $discount_percent);
-									
-									break;
-								}
-							case 0: // base price
-								$discount_percent = $discount_value * 1.0 / $product['price'];
-								$product['social_discount_percent'] = $discount_percent;
-								
-								if ($product['special']) {
-									$special = $product['special'] - $discount_value;
-								} else {
-									$special = $product['price'] - $discount_value;
-								}
-								
-								break;
-							}
-						}
-					
-						$product['special'] = $special;
-					} else {
-						$product['social_discount_percent'] = $special_percent;
-					}
-				}
-				
-				return $product;
-			}
+			$this->load->model('catalog/social_discount');
 			
-			public function __getProduct($product_id) {
+			while ( (list($key, $value) = each($results)) !== false ) {
+				$this->model_catalog_social_discount->updateProductSpecial($results[$key]);
+			}
 			]]></add>
-		</operation>		
+		</operation>
+	</file>
+	
+	<file name="catalog/controller/product/special.php,catalog/controller/module/special.php">
+		<operation>
+			<search position="after"><![CDATA[
+			$results = $this->model_catalog_product->getProductSpecials
+			]]></search>
+			<add><![CDATA[
+			$this->load->model('catalog/social_discount');
+			
+			while ( (list($key, $value) = each($results)) !== false ) {
+				$this->model_catalog_social_discount->updateProductSpecial($results[$key]);
+			}
+			]]></add>
+		</operation>
+	</file>
+	
+	<file name="catalog/controller/module/bestseller.php">
+		<operation>
+			<search position="after"><![CDATA[
+			$results = $this->model_catalog_product->getBestSellerProducts
+			]]></search>
+			<add><![CDATA[
+			$this->load->model('catalog/social_discount');
+			
+			while ( (list($key, $value) = each($results)) !== false ) {
+				$this->model_catalog_social_discount->updateProductSpecial($results[$key]);
+			}
+			]]></add>
+		</operation>
+	</file>
+	
+	<file name="catalog/controller/product/compare.php,catalog/controller/module/featured.php">
+		<operation>
+			<search position="after"><![CDATA[
+			if ($product_info) {
+			]]></search>
+			<add><![CDATA[
+			$this->load->model('catalog/social_discount');
+			$this->model_catalog_social_discount->updateProductSpecial($product_info);
+			]]></add>
+		</operation>
 	</file>
 	
 	<file name="admin/controller/catalog/product.php">

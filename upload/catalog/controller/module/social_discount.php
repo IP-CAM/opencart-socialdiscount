@@ -34,6 +34,7 @@ class ControllerModuleSocialDiscount extends Controller {
 				// calculate and return new price with discount
 				$this->load->model('catalog/product');
 				$product = $this->model_catalog_product->getProduct($product_id);
+				$this->model_catalog_social_discount->updateProductSpecial($product);
 				
 				$json['percent'] = sprintf("%.3f", $product['social_discount_percent'] * 100);
 				if ($product['special']) {
