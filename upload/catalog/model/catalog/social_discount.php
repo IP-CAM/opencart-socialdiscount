@@ -133,17 +133,61 @@ class ModelCatalogSocialDiscount extends Model {
 		return $percent;
 	}
 	
+	protected function _getDiscountForProduct($discount, $product) {
+		$discount_method = $this->config->get('social_discount_discount_method');
+		$discount_type = $this->config->get('social_discount_discount_type');
+		
+		$discount_value = 0;
+		
+		if (isset($discount[ $product['product_id'] ]) === true) {
+			$discount_percent = $this->_getDiscountPercentForProduct($discount, $product['product_id']);
+				
+			$product['social_discount'] = ($discount_percent > 0);
+				
+			if ($product['price'] > 0 && isset($product['special'])) {
+				$special_percent = ($product['price'] - $product['special']) * 1.0 / $product['price'];
+			} else {
+				$special_percent = 0;
+			}
+			
+			if ($discount_percent > 0) {
+				if ($discount_type == 1) {
+					$discount_value = $discount_percent*100;
+				} else {
+					switch ($discount_method) {
+					case 1: // special price
+						if ($product['special']) {
+							$discount_value = $product['special'] * $discount_percent;
+							
+							break;
+						}
+					case 0: // base price
+						$product['social_discount_percent'] = $discount_percent;
+						
+						$discount_value = $product['price'] * $discount_percent;
+						
+						break;
+					}
+				}
+			}
+		}
+		
+		return $discount_value;
+	}
+	
+	public function getDiscountForProduct($product) {
+		$discount = $this->readCookie();
+		
+		return $this->_getDiscountForProduct($discount, $product);
+	}
+	
 	public function getDiscount($products) {
 		$discount = $this->readCookie();
 		
 		$result = 0;
 		
 		foreach ($products as $product) {
-			if (isset($discount[ $product['product_id'] ]) === true) {
-				$percent = $this->_getDiscountPercentForProduct($discount, $product['product_id']);
-				
-				$result += $product['total'] * $percent;
-			}
+			$result += $this->_getDiscountForProduct($discount, $product);
 		}
 		
 		return $result;
