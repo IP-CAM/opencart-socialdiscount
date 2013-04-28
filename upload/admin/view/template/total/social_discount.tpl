@@ -141,6 +141,18 @@
             <td><input type="text" name="social_discount_active_mark" value="<?php echo $social_discount_active_mark; ?>" size="20" /></td>
           </tr>
 		  
+		  <tr>
+            <td><?php echo $entry_discount_integration; ?><br/><span class="help"><?php echo $entry_discount_integration_help; ?></span></td>
+            <td>
+				<input type="checkbox" id="social_discount_integration_addthis_enabled" name="social_discount_integration_addthis_enabled"<?php echo $social_discount_integration_addthis_enabled ? ' checked="checked"' : ''; ?>/>
+				<label for="social_discount_integration_addthis_enabled">AddThis</label>
+				<br/>
+				
+				<input type="checkbox" id="social_discount_integration_pluso_enabled" name="social_discount_integration_pluso_enabled"<?php echo $social_discount_integration_pluso_enabled ? ' checked="checked"' : ''; ?>/>
+				<label for="social_discount_integration_pluso_enabled">Pluso</label>
+				<br/>
+			</td>
+          </tr>
         </table>
       </form>
     </div>

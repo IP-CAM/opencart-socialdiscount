@@ -24,6 +24,10 @@ $_['entry_discount_type']         = 'Discount type';
 $_['enty_social_discount_type_0'] = 'Percent (%)';
 $_['enty_social_discount_type_1'] = 'Fixed (%s)';
 
+$_['entry_discount_integration'] = 'Thirdparty services integration';
+$_['entry_discount_integration_help'] = 'ATTENTION! No one of the thirdparty services sends garantee information about success post link on the client\'s wall. That\'s why in case of using thirdparty services discount provided <b>immediately after clicking share button</b>.';
+
+
 // Error
 $_['error_permission'] = 'Warning: You do not have permission to modify social-discount total!';
 ?>

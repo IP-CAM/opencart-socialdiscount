@@ -38,7 +38,10 @@ class ControllerTotalSocialDiscount extends Controller {
 		
 		$this->data['entry_discount_value'] = $this->language->get('entry_discount_value');
 		$this->data['entry_sort_order'] = $this->language->get('entry_sort_order');
-					
+		
+		$this->data['entry_discount_integration'] = $this->language->get('entry_discount_integration');
+		$this->data['entry_discount_integration_help'] = $this->language->get('entry_discount_integration_help');
+		
 		$this->data['button_save'] = $this->language->get('button_save');
 		$this->data['button_cancel'] = $this->language->get('button_cancel');
 
@@ -212,6 +215,18 @@ class ControllerTotalSocialDiscount extends Controller {
 			$this->data['social_discount_tw_like_value'] = $this->request->post['social_discount_tw_like_value'];
 		} else {
 			$this->data['social_discount_tw_like_value'] = $this->config->get('social_discount_tw_like_value');
+		}
+		
+		if (isset($this->request->post['social_discount_integration_addthis_enabled'])) {
+			$this->data['social_discount_integration_addthis_enabled'] = $this->request->post['social_discount_integration_addthis_enabled'];
+		} else {
+			$this->data['social_discount_integration_addthis_enabled'] = $this->config->get('social_discount_integration_addthis_enabled');
+		}
+		
+		if (isset($this->request->post['social_discount_integration_pluso_enabled'])) {
+			$this->data['social_discount_integration_pluso_enabled'] = $this->request->post['social_discount_integration_pluso_enabled'];
+		} else {
+			$this->data['social_discount_integration_pluso_enabled'] = $this->config->get('social_discount_integration_pluso_enabled');
 		}
 		
 		$this->template = 'total/social_discount.tpl';

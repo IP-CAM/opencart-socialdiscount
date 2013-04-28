@@ -10,6 +10,8 @@ List of supported social networks:
  * Mail.Ru
  * Odnoklassniki.ru
  * Twitter
+
+Supported buttons of AddThis.com and Pluso.ru services - discount is given to client immediately after click, without confirm from social network.
  
 Setup options:
  * Discount can be calculated from main or special price.

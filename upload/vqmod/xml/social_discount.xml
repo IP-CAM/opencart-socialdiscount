@@ -18,7 +18,7 @@ VK.Observer.subscribe("widgets.like.liked", function () {
 VK.Observer.subscribe("widgets.like.unliked", function () {
 	sd_userAction('vk','unlike');
 });
-<?php endif; ?>
+<?php endif; // vk_like ?>
 <?php if ($social_discount_vk_share_enabled): ?>
 VK.Observer.subscribe("widgets.like.shared", function () {
 	sd_userAction('vk','share');
@@ -26,6 +26,7 @@ VK.Observer.subscribe("widgets.like.shared", function () {
 VK.Observer.subscribe("widgets.like.unpublished", function () {
 	sd_userAction('vk','unpublish');
 });
+
 <?php endif; ?>
 
 <?php if ($social_discount_fb_like_enabled): ?>
@@ -99,6 +100,86 @@ twttr.ready(function (twttr) {
 });
 <?php endif; ?>
 
+<?php if ($social_discount_integration_addthis_enabled): /*     AddThis Integration   */ ?>
+function addThisReady(evt) {
+	<?php if ($social_discount_vk_share_enabled): ?>
+	$('.addthis_button_vk').click(function() {
+		sd_userAction('vk','share');
+	});
+	<?php endif; ?>
+	<?php if ($social_discount_fb_like_enabled): ?>
+	$('.addthis_button_facebook').click(function() {
+		sd_userAction('fb','like');
+	});
+	<?php endif; ?>
+	<?php if ($social_discount_gp_like_enabled): ?>
+	$('.addthis_button_google_plusone').click(function() {
+		sd_userAction('gp','like');
+	});
+	<?php endif; ?>
+	
+	<?php if ($social_discount_mm_like_enabled): ?>
+	$('.addthis_button_mymailru').click(function() {
+		sd_userAction('mm','like');
+	});
+	<?php endif; ?>
+	<?php if ($social_discount_ok_like_enabled): ?>
+	$('.addthis_button_odnoklassniki_ru').click(function() {
+		sd_userAction('ok','like');
+	});
+	<?php endif; ?>
+	
+	<?php if ($social_discount_tw_like_enabled): ?>
+	$('.addthis_button_twitter').click(function() {
+		sd_userAction('tw','like');
+	});
+	<?php endif; ?>
+}
+
+// Listen for the share event
+if ('undefined' != typeof addthis) {
+	addthis.addEventListener('addthis.ready', addThisReady);
+}
+<?php endif; ?>
+
+<?php if ($social_discount_integration_pluso_enabled): /*     Pluso Integration   */ ?>
+function pluso_ready() {
+	<?php if ($social_discount_vk_share_enabled): ?>
+	$('.pluso-vkontakte').click(function() {
+		sd_userAction('vk','share');
+	});
+	<?php endif; ?>
+	<?php if ($social_discount_fb_like_enabled): ?>
+	$('.pluso-facebook').click(function() {
+		sd_userAction('fb','like');
+	});
+	<?php endif; ?>
+	<?php if ($social_discount_gp_like_enabled): ?>
+	$('.pluso-google').click(function() {
+		sd_userAction('gp','like');
+	});
+	<?php endif; ?>
+	
+	<?php if ($social_discount_mm_like_enabled): ?>
+	$('.pluso-moimir').click(function() {
+		sd_userAction('mm','like');
+	});
+	<?php endif; ?>
+	<?php if ($social_discount_ok_like_enabled): ?>
+	$('.pluso-odnoklassniki').click(function() {
+		sd_userAction('ok','like');
+	});
+	<?php endif; ?>
+	
+	<?php if ($social_discount_tw_like_enabled): ?>
+	$('.pluso-twitter').click(function() {
+		sd_userAction('tw','like');
+	});
+	<?php endif; ?>
+}
+<?php endif; ?>
+
+
 function sd_userAction(soc, action) {
 	var product_id = <?php echo $product_id; ?>;
 	$.ajax({
@@ -168,6 +249,9 @@ function sd_userAction(soc, action) {
 			$this->data = array_merge($this->data, $sd_params);
 			
 			$this->data['social_discount_active_mark'] = $this->config->get('social_discount_active_mark');
+			
+			$this->data['social_discount_integration_addthis_enabled'] = $this->config->get('social_discount_integration_addthis_enabled');
+			$this->data['social_discount_integration_pluso_enabled'] = $this->config->get('social_discount_integration_pluso_enabled');
 			]]></add>
 		</operation>
 		
