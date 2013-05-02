@@ -312,6 +312,21 @@ function sd_userAction(soc, action) {
 			]]></add>
 		</operation>
 	</file>
+
+	<file name="catalog/controller/module/filterpro.php" error="skip">
+		<operation>
+			<search position="after"><![CDATA[
+			$products = $this->model_module_filterpro->getProducts
+			]]></search>
+			<add><![CDATA[
+			$this->load->model('catalog/social_discount');
+			
+			while ( (list($key, $value) = each($products)) !== false ) {
+				$this->model_catalog_social_discount->updateProductSpecial($products[$key]);
+			}
+			]]></add>
+		</operation>
+	</file>
 	
 	<file name="catalog/controller/product/compare.php,catalog/controller/module/featured.php">
 		<operation>
