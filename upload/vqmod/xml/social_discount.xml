@@ -11,6 +11,7 @@
 			]]></search>
 			<add><![CDATA[
 <script>
+if ('undefined' != typeof VK) {
 <?php if ($social_discount_vk_like_enabled): ?>
 VK.Observer.subscribe("widgets.like.liked", function () {
 	sd_userAction('vk','like');
@@ -26,8 +27,8 @@ VK.Observer.subscribe("widgets.like.shared", function () {
 VK.Observer.subscribe("widgets.like.unpublished", function () {
 	sd_userAction('vk','unpublish');
 });
-
 <?php endif; ?>
+}
 
 <?php if ($social_discount_fb_like_enabled): ?>
  window.fbAsyncInit = function() {
@@ -62,6 +63,7 @@ function plusone_share(data) {
 <?php endif; ?>
 
 <?php if ($social_discount_mm_like_enabled || $social_discount_ok_like_enabled): ?>
+if ('undefined' != typeof mailru) {
 mailru.loader.require('api', function(){
    mailru.events.listen(mailru.plugin.events.liked, function(result){
 	   /* todo - save ID of liked recored */
@@ -90,14 +92,17 @@ mailru.loader.require('api', function(){
 	   <?php endif; ?>
    });
 });
+}
 <?php endif; ?>
 
 <?php if ($social_discount_tw_like_enabled): ?>
+if ('undefined' != typeof twttr) {
 twttr.ready(function (twttr) {
 	twttr.events.bind('tweet', function(event) {
 		sd_userAction('tw','like');
 	});
 });
+}
 <?php endif; ?>
 
 <?php if ($social_discount_integration_addthis_enabled): /*     AddThis Integration   */ ?>
@@ -312,7 +317,7 @@ function sd_userAction(soc, action) {
 			]]></add>
 		</operation>
 	</file>
-
+	
 	<file name="catalog/controller/module/filterpro.php" error="skip">
 		<operation>
 			<search position="after"><![CDATA[
