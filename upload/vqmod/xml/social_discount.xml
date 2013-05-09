@@ -333,6 +333,25 @@ function sd_userAction(soc, action) {
 		</operation>
 	</file>
 	
+	<file name="catalog/controller/module/viewed.php" error="skip">
+		<operation>
+			<search position="before"><![CDATA[
+			foreach ($products as $product_id) {
+			]]></search>
+			<add><![CDATA[
+			$this->load->model('catalog/social_discount');
+			]]></add>
+		</operation>
+		<operation>
+			<search position="after"><![CDATA[
+			$product_info = $this->model_catalog_product
+			]]></search>
+			<add><![CDATA[
+			$this->model_catalog_social_discount->updateProductSpecial($product_info);
+			]]></add>
+		</operation>
+	</file>
+	
 	<file name="catalog/controller/product/compare.php,catalog/controller/module/featured.php">
 		<operation>
 			<search position="after"><![CDATA[
