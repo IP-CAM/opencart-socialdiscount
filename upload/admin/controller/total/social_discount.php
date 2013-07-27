@@ -14,7 +14,11 @@ class ControllerTotalSocialDiscount extends Controller {
 		
 			$this->session->data['success'] = $this->language->get('text_success');
 			
-			$this->redirect($this->url->link('extension/total', 'token=' . $this->session->data['token'], 'SSL'));
+			if (isset($this->request->post['apply']) && $this->request->post['apply'] == '1') {
+				$this->redirect($this->url->link('total/social_discount', 'token=' . $this->session->data['token'], 'SSL'));
+			} else {
+				$this->redirect($this->url->link('extension/total', 'token=' . $this->session->data['token'], 'SSL'));
+			}
 		}
 		
 		$this->data['heading_title'] = $this->language->get('heading_title');
@@ -44,7 +48,8 @@ class ControllerTotalSocialDiscount extends Controller {
 		
 		$this->data['button_save'] = $this->language->get('button_save');
 		$this->data['button_cancel'] = $this->language->get('button_cancel');
-
+		$this->data['button_apply'] = $this->language->get('button_apply');
+		
  		if (isset($this->error['warning'])) {
 			$this->data['error_warning'] = $this->error['warning'];
 		} else {
@@ -229,6 +234,131 @@ class ControllerTotalSocialDiscount extends Controller {
 			$this->data['social_discount_integration_pluso_enabled'] = $this->config->get('social_discount_integration_pluso_enabled');
 		}
 		
+		/* SOCIAL BUTTONS CODE */
+		if (isset($this->request->post['social_discount_use_internal_buttons'])) {
+			$this->data['social_discount_use_internal_buttons'] = $this->request->post['social_discount_use_internal_buttons'];
+		} else {
+			if ($this->config->get('social_discount_use_internal_buttons') != null) {
+				$this->data['social_discount_use_internal_buttons'] = $this->config->get('social_discount_use_internal_buttons');
+			} else {
+				$this->data['social_discount_use_internal_buttons'] = 1;
+			}
+		}
+		
+		if (isset($this->request->post['social_discount_vk_button_code'])) {
+			$this->data['social_discount_vk_button_code'] = $this->request->post['social_discount_vk_button_code'];
+		} else {
+			if ($this->config->get('social_discount_vk_button_code') != null) {
+				$this->data['social_discount_vk_button_code'] = $this->config->get('social_discount_vk_button_code');
+			} else {
+				$this->data['social_discount_vk_button_code'] = '';
+			}
+		}
+		
+		if (isset($this->request->post['social_discount_fb_button_code'])) {
+			$this->data['social_discount_fb_button_code'] = $this->request->post['social_discount_fb_button_code'];
+		} else {
+			if ($this->config->get('social_discount_fb_button_code') != null) {
+				$this->data['social_discount_fb_button_code'] = $this->config->get('social_discount_fb_button_code');
+			} else {
+				$this->data['social_discount_fb_button_code'] = <<<HTML
+<div class="fb-like" data-send="false" data-layout="button_count"  data-width="150" data-show-faces="true"></div>
+HTML;
+			}
+		}
+		
+		if (isset($this->request->post['social_discount_gp_button_code'])) {
+			$this->data['social_discount_gp_button_code'] = $this->request->post['social_discount_gp_button_code'];
+		} else {
+			if ($this->config->get('social_discount_gp_button_code') != null) {
+				$this->data['social_discount_gp_button_code'] = $this->config->get('social_discount_gp_button_code');
+			} else {
+				$this->data['social_discount_gp_button_code'] = <<<HTML
+<!-- Place this tag where you want the +1 button to render. -->
+<div class="g-plusone" data-callback="plusone_share" data-annotation="inline" data-width="300"></div>
+
+<!-- Place this tag after the last +1 button tag. -->
+<script type="text/javascript">
+  window.___gcfg = {lang: 'ru'};
+
+  (function() {
+    var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+    po.src = 'https://apis.google.com/js/plusone.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+  })();
+</script>
+HTML;
+			}
+		}
+		
+		if (isset($this->request->post['social_discount_mm_button_code'])) {
+			$this->data['social_discount_mm_button_code'] = $this->request->post['social_discount_mm_button_code'];
+		} else {
+			if ($this->config->get('social_discount_mm_button_code') != null) {
+				$this->data['social_discount_mm_button_code'] = $this->config->get('social_discount_mm_button_code');
+			} else {
+				$this->data['social_discount_mm_button_code'] = <<<HTML
+<a target="_blank" class="mrc__plugin_uber_like_button" href="http://connect.mail.ru/share" data-mrc-config="{'cm' : '1', 'sz' : '20', 'st' : '1', 'tp' : 'mm'}">Нравится</a>
+<script src="http://cdn.connect.mail.ru/js/loader.js" type="text/javascript" charset="UTF-8"></script>
+HTML;
+			}
+		}
+		
+		if (isset($this->request->post['social_discount_ok_button_code'])) {
+			$this->data['social_discount_ok_button_code'] = $this->request->post['social_discount_ok_button_code'];
+		} else {
+			if ($this->config->get('social_discount_ok_button_code') != null) {
+				$this->data['social_discount_ok_button_code'] = $this->config->get('social_discount_ok_button_code');
+			} else {
+				$this->data['social_discount_ok_button_code'] = <<<HTML
+<div id="ok_shareWidget"></div>
+<script>
+!function (d, id, did, st) {
+  var js = d.createElement("script");
+  js.src = "http://connect.ok.ru/connect.js";
+  js.onload = js.onreadystatechange = function () {
+  if (!this.readyState || this.readyState == "loaded" || this.readyState == "complete") {
+	if (!this.executed) {
+	  this.executed = true;
+	  setTimeout(function () {
+		OK.CONNECT.insertShareWidget(id,did,st);
+	  }, 0);
+	}
+  }};
+  d.documentElement.appendChild(js);
+}(document,"ok_shareWidget","http://dev.ok.ru","{width:145,height:30,st:'oval',sz:20,ck:1}");
+</script>
+HTML;
+			}
+		}
+		
+		if (isset($this->request->post['social_discount_tw_button_code'])) {
+			$this->data['social_discount_tw_button_code'] = $this->request->post['social_discount_tw_button_code'];
+		} else {
+			if ($this->config->get('social_discount_tw_button_code') != null) {
+				$this->data['social_discount_tw_button_code'] = $this->config->get('social_discount_tw_button_code');
+			} else {
+				$this->data['social_discount_tw_button_code'] = <<<HTML
+<a href="https://twitter.com/share" class="twitter-share-button" >Tweet</a>
+<script type="text/javascript" charset="utf-8">
+window.twttr = (function (d,s,id) {
+var t, js, fjs = d.getElementsByTagName(s)[0];
+if (d.getElementById(id)) return; js=d.createElement(s); js.id=id;
+js.src="//platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs);
+return window.twttr || (t = { _e: [], ready: function(f){ t._e.push(f) } });
+}(document, "script", "twitter-wjs"));
+</script>
+HTML;
+			}
+		}
+		/*
+		$anyProduct = $this->db->query('SELECT product_id FROM ' . DB_PREFIX . 'product LIMIT 0,1');
+		if ($anyProduct->row) {
+			$this->data['social_discount_preview_product'] = '/index.php?route=product/product&product_id=' . $anyProduct->row['product_id'];
+		} else {
+			$this->data['social_discount_preview_product'] = false;
+		}
+		*/
 		$this->template = 'total/social_discount.tpl';
 		$this->children = array(
 			'common/header',

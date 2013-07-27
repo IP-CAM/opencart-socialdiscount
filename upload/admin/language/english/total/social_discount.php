@@ -2,6 +2,7 @@
 // Heading
 $_['heading_title']    = 'Social Discount';
 
+$_['button_apply']     = 'Apply';
 // Text
 $_['text_success']     = 'Success: You have modified social-discount total!';
 
