@@ -4,20 +4,21 @@
 	<vqmver>2.0.0</vqmver>
 	<author>Gennady Telegin, support@itxd.ru</author>
 	
-	<file name="catalog/view/theme/default/template/product/product.tpl">	
+	<file name="catalog/view/theme/*/template/product/product.tpl">	
 		<operation>
             <search position="replace" error="skip"><![CDATA[{SOCIAL_BUTTONS}]]></search>
             <add><![CDATA[
-			<?php if (isset($social_discount_use_internal_buttons) && $social_discount_use_internal_buttons): ?>
+			<?php if (isset($social_discount_use_internal_buttons) && $social_discount_use_internal_buttons && (float)$price > 0): ?>
 			<style>
 			#social_discount_buttons {
 				position: relative;
-				height: 150px;
+				height: 100px;
 			}
 
 			.social_discount_button {
 				float: left;
 				width: 150px;
+				margin-top: 5px;
 			}
 			
 			#social_discount_button_vk {
@@ -162,6 +163,7 @@
 {VK_BUTTON_CODE}
 {FB_BUTTON_CODE}
 {MM_BUTTON_CODE}
+<div style="clear: left"></div>
 {OK_BUTTON_CODE}
 {TW_BUTTON_CODE}
 {GP_BUTTON_CODE}
