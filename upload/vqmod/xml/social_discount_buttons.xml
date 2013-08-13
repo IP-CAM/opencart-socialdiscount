@@ -8,7 +8,7 @@
 		<operation>
             <search position="replace" error="skip"><![CDATA[{SOCIAL_BUTTONS}]]></search>
             <add><![CDATA[
-			<?php if (isset($social_discount_use_internal_buttons) && $social_discount_use_internal_buttons && (float)$price > 0): ?>
+			<?php if (isset($social_discount_use_internal_buttons) && $social_discount_use_internal_buttons): ?>
 			<style>
 			#social_discount_buttons {
 				position: relative;
@@ -163,7 +163,7 @@
 {VK_BUTTON_CODE}
 {FB_BUTTON_CODE}
 {MM_BUTTON_CODE}
-<div style="clear: left"></div>
+
 {OK_BUTTON_CODE}
 {TW_BUTTON_CODE}
 {GP_BUTTON_CODE}
