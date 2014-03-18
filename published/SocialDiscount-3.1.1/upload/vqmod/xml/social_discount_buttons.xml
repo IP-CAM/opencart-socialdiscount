@@ -19,10 +19,10 @@
 				float: left;
 				width: 150px;
 				margin-top: 5px;
-				height: 26px;
 			}
 			
 			#social_discount_button_vk {
+				height: 24px;
 			}
 			#social_discount_button_fb {
 			}

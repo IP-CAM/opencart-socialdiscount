@@ -1,0 +1,91 @@
+<modification>
+	<id>Social Discount (Shoppica2 Theme)</id>
+	<version>2.2</version>
+	<vqmver>2.0.0</vqmver>
+	<author>Gennady Telegin, support@itxd.ru</author>	
+	
+	<!-- Shoppica2 -->
+	<file name="catalog/view/theme/shoppica2/template/product/product.tpl" error="skip">
+		<operation error="skip">
+            <search position="before"><![CDATA[
+            <?php echo $footer; ?>
+            ]]></search>
+            <add><![CDATA[
+<script type="text/javascript">
+function sd_updateOffer(data) {
+	if (data['percent'] > 0) {
+		$('#priceUpdate').html( $('#priceUpdate1').html() );
+		$('#priceUpdate1').html(data['discount_price']);
+		$('#priceUpdate').addClass('price-old');
+		
+		if (data['social_discount']) {
+			$('#social_discount_active').show();
+			
+			// shoppica2:
+			$('#priceUpdate').show();
+			$('.s_price').addClass('s_promo_price');
+		} else {
+			$('#social_discount_active').hide();
+			
+			// shoppica2:
+			//$('#priceUpdate').hide();
+			//$('.s_price').removeClass('s_promo_price');
+		}
+	} else {
+		$('#priceUpdate').removeClass('price-old');
+		$('#priceUpdate1').html($('#priceUpdate').html());
+		$('#social_discount_active').hide();
+		
+		// shoppica2:
+		$('#priceUpdate').hide();
+		$('.s_price').removeClass('s_promo_price');
+	}
+}
+</script>
+			]]></add>
+        </operation>
+		
+		<operation>
+            <search position="before" index="1"><![CDATA[
+            <span itemprop="price">
+            ]]></search>
+            <add><![CDATA[
+			<span class="s_old_price price-old" id="priceUpdate" style="display: none;"></span>
+			]]></add>
+        </operation>
+		
+		<operation>
+            <search position="replace"><![CDATA[
+            <span itemprop="price">
+            ]]></search>
+            <add><![CDATA[
+			<span itemprop="price" id="priceUpdate1">
+			]]></add>
+        </operation>
+		
+		<operation>
+            <search position="replace" index="1"><![CDATA[
+			<span class="s_old_price">
+            ]]></search>
+            <add><![CDATA[
+			<span class="s_old_price price-old" id="priceUpdate">
+			]]></add>
+        </operation>
+		
+		<operation>
+			<search position="after"><![CDATA[
+			<div id="product_price"
+			]]></search>
+			<add><![CDATA[
+			<style>
+				#social_discount_active {
+					position: absolute;
+					top: 100px;
+					right: 0px;
+				}
+			</style>
+			<div id="social_discount_active"<?php if ($social_discount == false) { echo ' style="display: none;"'; } else { echo ' style="display: inline-block"'; } ?>><?php echo $social_discount_active_mark; ?></div>
+			]]></add>
+		</operation>
+	</file>
+</modification>
